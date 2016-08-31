@@ -3,14 +3,8 @@ package duan.felix.wallpaper.feed;
 import android.app.Activity;
 import android.os.Bundle;
 
-import java.util.List;
-
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.core.Photo;
-import duan.felix.wallpaper.core.net.PhotosClient;
-import duan.felix.wallpaper.view.PhotoListContainer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import duan.felix.wallpaper.core.model.Feed;
 
 /**
  * @author Felix.Duan.
@@ -18,10 +12,9 @@ import rx.functions.Action1;
 
 public class FeedListActivity extends Activity {
 
-    //    @Inject
-    PhotosClient client = new PhotosClient();
-
-    private PhotoListContainer container;
+    private FeedListPresenter mListPresenter;
+    private FeedListView mListView;
+    private Feed mFeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +23,34 @@ public class FeedListActivity extends Activity {
 //        DaggerInjection.builder().build();
         setContentView(R.layout.feed_list);
         // TODO: use butterknife
-        container = (PhotoListContainer) findViewById(R.id.container);
+        mFeed = new Feed();
+        mListView = (FeedListView) findViewById(R.id.container);
+        mListPresenter = new FeedListPresenter(mFeed, mListView);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mListPresenter.bind();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        client.getPhotos()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Photo>>() {
-                    @Override
-                    public void call(List<Photo> photos) {
-                        container.setItems(photos);
-                    }
-                });
+//        client.getPhotos("", null)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Portion<Photo>>() {
+//                    @Override
+//                    public void call(Portion<Photo> photos) {
+//                        mListView.setItems(photos.items);
+//                    }
+//                });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mListPresenter.unbind();
+    }
 }

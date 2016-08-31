@@ -1,10 +1,11 @@
-package duan.felix.wallpaper;
+package duan.felix.wallpaper.scaffold.app;
 
-import android.app.Application;
+import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.squareup.otto.Bus;
 
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 
@@ -12,15 +13,19 @@ import duan.felix.wallpaper.scaffold.net.OkHttpClients;
  * @author Felix.Duan.
  */
 
-public class WApplication extends Application {
+public class Global {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public static Bus bus;
 
+    public Global(Context context) {
+
+        // Fresco
         ImagePipelineConfig config =
                 OkHttpImagePipelineConfigFactory
-                        .newBuilder(this, OkHttpClients.DEFAULT).build();
-        Fresco.initialize(this, config);
+                        .newBuilder(context, OkHttpClients.DEFAULT).build();
+        Fresco.initialize(context, config);
+
+        // Otto
+        bus = new Bus();
     }
 }

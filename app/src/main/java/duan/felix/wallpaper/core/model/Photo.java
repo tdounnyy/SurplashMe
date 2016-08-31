@@ -1,10 +1,12 @@
-package duan.felix.wallpaper.core;
+package duan.felix.wallpaper.core.model;
+
+import duan.felix.wallpaper.scaffold.model.Model;
 
 /**
  * @author Felix.Duan.
  */
 
-public class Photo {
+public class Photo implements Model {
     public String id;
     public Urls urls;
     public int height;

@@ -1,8 +1,8 @@
-package duan.felix.wallpaper.view;
+package duan.felix.wallpaper.feed;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,37 +14,43 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.core.Photo;
+import duan.felix.wallpaper.core.model.Photo;
 
 /**
  * @author Felix.Duan.
  */
 
-public class PhotoListContainer extends LinearLayout {
+public class FeedListView extends LinearLayout {
 
+    private static final int THRESHOLD = 5;
     PhotoListAdapter mAdapter;
     RecyclerView mRecyclerView;
 
-    public PhotoListContainer(Context context) {
+    public FeedListView(Context context) {
         this(context, null);
     }
 
-    public PhotoListContainer(Context context, AttributeSet attrs) {
+    public FeedListView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PhotoListContainer(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FeedListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.list_container, this);
         mAdapter = new PhotoListAdapter();
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setOnScrollListener(new LoadMoreListener(THRESHOLD));
     }
 
     public void setItems(List<Photo> items) {
         mAdapter.setItems(items);
+    }
+
+    public void appendItems(List<Photo> items) {
+        mAdapter.appendItems(items);
     }
 
     class PhotoListAdapter extends RecyclerView.Adapter<PhotoListAdapter.ViewHolder> {
@@ -53,6 +59,11 @@ public class PhotoListContainer extends LinearLayout {
 
         void setItems(List<Photo> items) {
             this.items = items;
+            notifyDataSetChanged();
+        }
+
+        void appendItems(List<Photo> append) {
+            items.addAll(append);
             notifyDataSetChanged();
         }
 
@@ -68,7 +79,7 @@ public class PhotoListContainer extends LinearLayout {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Photo photo = items.get(position);
             holder.setPhoto(photo);
-            holder.setAspectRatio(position % 3 == 0);
+//            holder.setAspectRatio(position % 3 == 0);
         }
 
         @Override
@@ -96,4 +107,5 @@ public class PhotoListContainer extends LinearLayout {
             }
         }
     }
+
 }
