@@ -9,6 +9,7 @@ import duan.felix.wallpaper.core.model.Feed;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -18,13 +19,14 @@ import rx.functions.Action1;
 
 public class FeedListPresenter extends Presenter<Feed, FeedListView> {
 
+    private static final String TAG = "FeedListPresenter";
     private Feed mFeed;
     private int page = 1;
     private FeedListView mListView;
     private FeedSource mFeedSource;
+    private boolean mInit = true;
 
     public FeedListPresenter(Feed feed, FeedListView listView) {
-        Global.bus.register(this);
         this.mFeed = feed;
         this.mListView = listView;
         mFeedSource = new FeedSource(mFeed.id);
@@ -53,16 +55,44 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
                 });
     }
 
+    public void tryInit() {
+        LogUtils.d(TAG, "tryInit");
+        if (mInit) {
+            mInit = false;
+            Global.bus.post(new RefreshEvent());
+        }
+    }
+
     @Override
     public void bind() {
-        Global.bus.post(new RefreshEvent());
     }
 
     @Override
     public void unbind() {
-        Global.bus.unregister(this);
         mFeed = null;
         mListView = null;
         mFeedSource = null;
+        mInit = true;
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
+
+    @Override
+    public void onResume() {
+        Global.bus.register(this);
+        tryInit();
+    }
+
+    @Override
+    public void onPause() {
+        Global.bus.unregister(this);
     }
 }

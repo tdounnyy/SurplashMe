@@ -13,4 +13,12 @@ public abstract class Presenter<M extends Model, V extends View> {
     public abstract void bind();
 
     public abstract void unbind();
+
+    public abstract void onStart();
+
+    public abstract void onStop();
+
+    public abstract void onResume();
+
+    public abstract void onPause();
 }

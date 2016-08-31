@@ -1,5 +1,7 @@
 package duan.felix.wallpaper.scaffold.net;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +18,9 @@ import okhttp3.Response;
 public class OkHttpClients {
 
     public static final OkHttpClient DEFAULT = defaultClientBuilder()
-            .addInterceptor(new TokenInterceptor()).build();
+            .addInterceptor(new TokenInterceptor())
+            .addNetworkInterceptor(new StethoInterceptor())
+            .build();
 
     private static OkHttpClient.Builder defaultClientBuilder() {
 

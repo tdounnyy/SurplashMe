@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Feed;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
  * @author Felix.Duan.
@@ -12,6 +13,7 @@ import duan.felix.wallpaper.core.model.Feed;
 
 public class FeedListActivity extends Activity {
 
+    private static final String TAG = "FeedListActivity";
     private FeedListPresenter mListPresenter;
     private FeedListView mListView;
     private Feed mFeed;
@@ -25,32 +27,32 @@ public class FeedListActivity extends Activity {
         // TODO: use butterknife
         mFeed = new Feed();
         mListView = (FeedListView) findViewById(R.id.container);
-
+        mListPresenter = new FeedListPresenter(mFeed, mListView);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mListPresenter = new FeedListPresenter(mFeed, mListView);
-        mListPresenter.bind();
+        LogUtils.d(TAG, "onStart");
+        mListPresenter.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        client.getPhotos("", null)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<Portion<Photo>>() {
-//                    @Override
-//                    public void call(Portion<Photo> photos) {
-//                        mListView.setItems(photos.items);
-//                    }
-//                });
+        mListPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mListPresenter.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mListPresenter.unbind();
+        LogUtils.d(TAG, "onStop");
+        mListPresenter.onStart();
     }
 }
