@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
@@ -30,6 +31,7 @@ public class FeedListView extends LinearLayout {
 
     PhotoListAdapter mAdapter;
 
+    @BindView(R.id.list)
     RecyclerView mRecyclerView;
 
     public FeedListView(Context context) {
@@ -43,8 +45,8 @@ public class FeedListView extends LinearLayout {
     public FeedListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.list_container, this);
+        ButterKnife.bind(this);
         mAdapter = new PhotoListAdapter();
-        mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setOnScrollListener(new LoadMoreListener(THRESHOLD));
@@ -94,11 +96,12 @@ public class FeedListView extends LinearLayout {
         class ViewHolder extends RecyclerView.ViewHolder {
 
             Photo photo = null;
+            @BindView(R.id.photo_item)
             SimpleDraweeView mDraweeView;
 
             ViewHolder(View itemView) {
                 super(itemView);
-                mDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.photo_item);
+                ButterKnife.bind(this, itemView);
             }
 
             void setPhoto(Photo photo) {
