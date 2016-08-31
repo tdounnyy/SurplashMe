@@ -37,7 +37,7 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
                     @Override
                     public void call(Portion<Photo> photos) {
                         mListView.setItems(photos.items);
-                        page = 0;
+                        page = 1;
                     }
                 });
     }

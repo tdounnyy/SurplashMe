@@ -2,6 +2,7 @@ package duan.felix.wallpaper.core.client;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import duan.felix.wallpaper.core.list.Portion;
@@ -20,6 +21,10 @@ import rx.schedulers.Schedulers;
 
 public class FeedClient extends Client {
 
+    private static final String TAG = "FeedClient";
+
+    private static final int PER_PAGE = 30;
+
     private static final Retrofit retrofit = Retrofits.defaultBuilder()
             .client(OkHttpClients.DEFAULT)
             .build();
@@ -27,14 +32,19 @@ public class FeedClient extends Client {
     private static final FeedEndpoint endpoint = retrofit.create(FeedEndpoint.class);
 
     public Observable<Portion<Photo>> getPhotos(@NonNull String feedId, Integer page) {
-        // TODO: make a call executor?
-        return endpoint.getPhotos(feedId, page).subscribeOn(Schedulers.io())
+        return endpoint.getPhotos(feedId, page, PER_PAGE)
+                .subscribeOn(Schedulers.io())
+                .onErrorReturn(new Func1<Throwable, List<Photo>>() {
+                    @Override
+                    public List<Photo> call(Throwable throwable) {
+                        return new ArrayList<>();
+                    }
+                })
                 .flatMap(new Func1<List<Photo>, Observable<Portion<Photo>>>() {
                     @Override
                     public Observable<Portion<Photo>> call(List<Photo> photos) {
                         return Observable.just(new Portion<>(photos));
                     }
-
                 });
     }
 }

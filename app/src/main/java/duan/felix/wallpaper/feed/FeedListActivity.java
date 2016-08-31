@@ -21,17 +21,17 @@ public class FeedListActivity extends Activity {
         super.onCreate(savedInstanceState);
         // TODO: use dagger2
 //        DaggerInjection.builder().build();
-        setContentView(R.layout.feed_list);
+        setContentView(R.layout.feed_activity);
         // TODO: use butterknife
         mFeed = new Feed();
         mListView = (FeedListView) findViewById(R.id.container);
-        mListPresenter = new FeedListPresenter(mFeed, mListView);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mListPresenter = new FeedListPresenter(mFeed, mListView);
         mListPresenter.bind();
     }
 

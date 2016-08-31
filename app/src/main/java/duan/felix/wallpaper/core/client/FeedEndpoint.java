@@ -16,6 +16,7 @@ interface FeedEndpoint {
 
     @GET("photos/{feedId}")
     Observable<List<Photo>> getPhotos(@Path("feedId") String feedId,
-                                      @Query("page") Integer page);
+                                      @Query("page") Integer page,
+                                      @Query("per_page") Integer perPage);
 
 }

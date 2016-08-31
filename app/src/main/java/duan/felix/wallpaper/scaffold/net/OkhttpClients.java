@@ -1,7 +1,9 @@
 package duan.felix.wallpaper.scaffold.net;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import duan.felix.wallpaper.BuildConfig;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,7 +20,13 @@ public class OkHttpClients {
 
     private static OkHttpClient.Builder defaultClientBuilder() {
 
-        return new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.readTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS)
+                    .connectTimeout(5, TimeUnit.SECONDS);
+        }
+        return builder;
     }
 
     private static class TokenInterceptor implements Interceptor {

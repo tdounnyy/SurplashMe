@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
  * @author Felix.Duan.
@@ -22,8 +24,12 @@ import duan.felix.wallpaper.core.model.Photo;
 
 public class FeedListView extends LinearLayout {
 
+    private static final String TAG = "FeedListView";
+
     private static final int THRESHOLD = 5;
+
     PhotoListAdapter mAdapter;
+
     RecyclerView mRecyclerView;
 
     public FeedListView(Context context) {
@@ -40,7 +46,6 @@ public class FeedListView extends LinearLayout {
         mAdapter = new PhotoListAdapter();
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mRecyclerView.setAdapter(mAdapter);
-//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setOnScrollListener(new LoadMoreListener(THRESHOLD));
     }
@@ -79,7 +84,6 @@ public class FeedListView extends LinearLayout {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Photo photo = items.get(position);
             holder.setPhoto(photo);
-//            holder.setAspectRatio(position % 3 == 0);
         }
 
         @Override
@@ -99,6 +103,7 @@ public class FeedListView extends LinearLayout {
 
             void setPhoto(Photo photo) {
                 this.photo = photo;
+                LogUtils.d(TAG, "setPhoto");
                 mDraweeView.setImageURI(photo.urls.regular);
             }
 
