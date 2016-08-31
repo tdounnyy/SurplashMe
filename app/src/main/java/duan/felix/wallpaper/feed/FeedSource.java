@@ -1,9 +1,12 @@
 package duan.felix.wallpaper.feed;
 
+import javax.inject.Inject;
+
 import duan.felix.wallpaper.core.client.FeedClient;
 import duan.felix.wallpaper.core.list.ListSource;
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
+import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.Observable;
 
@@ -17,10 +20,12 @@ public class FeedSource extends ListSource<Photo> {
 
     private static final String TAG = "FeedSource";
 
-    private FeedClient mClient = new FeedClient();
+    @Inject
+    FeedClient mClient;
     private String feedId = null;
 
     public FeedSource(String feedId) {
+        Global.Injector.inject(this);
         setFeedId(feedId);
     }
 

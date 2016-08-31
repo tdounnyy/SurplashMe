@@ -8,6 +8,8 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.stetho.Stetho;
 import com.squareup.otto.Bus;
 
+import duan.felix.wallpaper.scaffold.dagger2.DIModule;
+import duan.felix.wallpaper.scaffold.dagger2.DaggerDIModule_DIComponent;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 
 /**
@@ -17,6 +19,7 @@ import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 public class Global {
 
     public static Bus bus;
+    public static DIModule.DIComponent Injector;
 
     public Global(Context context) {
 
@@ -31,5 +34,11 @@ public class Global {
 
         // Stetho
         Stetho.initializeWithDefaults(context);
+
+        // Dagger2
+        // TODO: can be simpler using create()
+        Injector = DaggerDIModule_DIComponent
+                .builder()
+                .dIModule(new DIModule()).build();
     }
 }

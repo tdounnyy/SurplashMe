@@ -21,8 +21,6 @@ public class FeedListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: use dagger2
-//        DaggerInjection.builder().build();
         setContentView(R.layout.feed_activity);
         // TODO: use butterknife
         mFeed = new Feed();
