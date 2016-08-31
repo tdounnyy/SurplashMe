@@ -16,5 +16,26 @@ public class Photo {
         public String regular;
         public String small;
         public String thumb;
+
+        @Override
+        public String toString() {
+            return "Urls{" +
+                    "raw='" + raw + '\'' +
+                    ", full='" + full + '\'' +
+                    ", regular='" + regular + '\'' +
+                    ", small='" + small + '\'' +
+                    ", thumb='" + thumb + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "id='" + id + '\'' +
+                ", urls=" + urls +
+                ", height=" + height +
+                ", width=" + width +
+                '}';
     }
 }
