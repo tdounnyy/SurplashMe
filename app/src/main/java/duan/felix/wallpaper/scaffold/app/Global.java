@@ -20,9 +20,12 @@ public class Global {
 
     public static Bus bus;
     public static DIModule.DIComponent Injector;
+    public static Context App;
 
     public Global(Context context) {
 
+        // App context
+        App = context;
         // Fresco
         ImagePipelineConfig config =
                 OkHttpImagePipelineConfigFactory

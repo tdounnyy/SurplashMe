@@ -25,11 +25,11 @@ public class OkHttpClients {
     private static OkHttpClient.Builder defaultClientBuilder() {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (BuildConfig.DEBUG) {
-            builder.readTimeout(5, TimeUnit.SECONDS)
-                    .writeTimeout(5, TimeUnit.SECONDS)
-                    .connectTimeout(5, TimeUnit.SECONDS);
-        }
+//        if (BuildConfig.DEBUG) {
+//            builder.readTimeout(5, TimeUnit.SECONDS)
+//                    .writeTimeout(5, TimeUnit.SECONDS)
+//                    .connectTimeout(5, TimeUnit.SECONDS);
+//        }
         return builder;
     }
 

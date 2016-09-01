@@ -31,8 +31,8 @@ public class FeedClient extends Client {
 
     private static final FeedEndpoint endpoint = retrofit.create(FeedEndpoint.class);
 
-    public Observable<Portion<Photo>> getPhotos(@NonNull String feedId, Integer page) {
-        return endpoint.getPhotos(feedId, page, PER_PAGE)
+    public Observable<Portion<Photo>> getPhotoList(@NonNull String feedId, Integer page) {
+        return endpoint.getPhotoList(feedId, page, PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .onErrorReturn(new Func1<Throwable, List<Photo>>() {
                     @Override
@@ -44,6 +44,17 @@ public class FeedClient extends Client {
                     @Override
                     public Observable<Portion<Photo>> call(List<Photo> photos) {
                         return Observable.just(new Portion<>(photos));
+                    }
+                });
+    }
+
+    public Observable<Photo> getPhoto(@NonNull String photoId) {
+        return endpoint.getPhoto(photoId)
+                .subscribeOn(Schedulers.io())
+                .onErrorReturn(new Func1<Throwable, Photo>() {
+                    @Override
+                    public Photo call(Throwable throwable) {
+                        return Photo.NULL;
                     }
                 });
     }

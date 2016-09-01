@@ -7,6 +7,9 @@ import duan.felix.wallpaper.scaffold.model.Model;
  */
 
 public class Photo implements Model {
+
+    public static final Photo NULL = new Photo();
+
     public String id;
     public Urls urls;
     public int height;

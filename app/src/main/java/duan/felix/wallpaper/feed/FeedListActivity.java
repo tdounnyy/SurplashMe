@@ -24,7 +24,7 @@ public class FeedListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.feed_activity);
+        setContentView(R.layout.activity_feed);
         ButterKnife.bind(this);
         mFeed = new Feed();
         mListPresenter = new FeedListPresenter(mFeed, mListView);

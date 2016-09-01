@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import duan.felix.wallpaper.browser.BrowserActivity;
 import duan.felix.wallpaper.core.client.FeedClient;
 import duan.felix.wallpaper.feed.FeedSource;
 
@@ -30,5 +31,7 @@ public class DIModule {
     @Component(modules = DIModule.class)
     public interface DIComponent {
         void inject(FeedSource feedSource);
+
+        void inject(BrowserActivity activity);
     }
 }

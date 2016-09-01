@@ -32,19 +32,19 @@ public class FeedSource extends ListSource<Photo> {
     @Override
     public Observable<Portion<Photo>> refresh() {
         LogUtils.d(TAG, "refresh");
-        return mClient.getPhotos(feedId, null);
+        return mClient.getPhotoList(feedId, null);
     }
 
     @Override
     public Observable<Portion<Photo>> loadAfter(int page) {
         LogUtils.d(TAG, "loadAfter" + page);
-        return mClient.getPhotos(feedId, page);
+        return mClient.getPhotoList(feedId, page);
     }
 
     @Override
     public Observable<Portion<Photo>> loadBefore(int page) {
         LogUtils.d(TAG, "loadBefore" + page);
-        return mClient.getPhotos(feedId, page);
+        return mClient.getPhotoList(feedId, page);
     }
 
     public void setFeedId(String feedId) {

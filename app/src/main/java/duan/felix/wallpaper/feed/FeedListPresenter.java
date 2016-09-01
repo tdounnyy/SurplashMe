@@ -56,7 +56,6 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
     }
 
     public void tryInit() {
-        LogUtils.d(TAG, "tryInit");
         if (mInit) {
             mInit = false;
             Global.bus.post(new RefreshEvent());

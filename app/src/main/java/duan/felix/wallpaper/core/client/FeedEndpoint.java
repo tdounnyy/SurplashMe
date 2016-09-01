@@ -15,8 +15,11 @@ import rx.Observable;
 interface FeedEndpoint {
 
     @GET("photos/{feedId}")
-    Observable<List<Photo>> getPhotos(@Path("feedId") String feedId,
-                                      @Query("page") Integer page,
-                                      @Query("per_page") Integer perPage);
+    Observable<List<Photo>> getPhotoList(@Path("feedId") String feedId,
+                                         @Query("page") Integer page,
+                                         @Query("per_page") Integer perPage);
 
+
+    @GET("photos/{photoId}")
+    Observable<Photo> getPhoto(@Path("photoId") String photoId);
 }

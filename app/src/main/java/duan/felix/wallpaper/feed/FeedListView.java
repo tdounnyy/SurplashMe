@@ -5,11 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -77,9 +74,8 @@ public class FeedListView extends LinearLayout {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(
-                    LayoutInflater.from(
-                            parent.getContext())
-                            .inflate(R.layout.photo_item, parent, false));
+                    (FeedListItemView) LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.photo_item_container, parent, false));
         }
 
         @Override
@@ -95,24 +91,17 @@ public class FeedListView extends LinearLayout {
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
-            Photo photo = null;
-            @BindView(R.id.photo_item)
-            SimpleDraweeView mDraweeView;
+            FeedListItemView itemView;
 
-            ViewHolder(View itemView) {
+            ViewHolder(FeedListItemView itemView) {
                 super(itemView);
-                ButterKnife.bind(this, itemView);
+                this.itemView = itemView;
             }
 
             void setPhoto(Photo photo) {
-                this.photo = photo;
-                LogUtils.d(TAG, "setPhoto");
-                mDraweeView.setImageURI(photo.urls.regular);
+                itemView.setPhoto(photo);
             }
 
-            void setAspectRatio(boolean wide) {
-                mDraweeView.setAspectRatio(wide ? 1.125f : 0.56f);
-            }
         }
     }
 
