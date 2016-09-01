@@ -30,9 +30,6 @@ public class Global {
                         .newBuilder(context, OkHttpClients.DEFAULT).build();
         Fresco.initialize(context, config);
 
-        // Otto
-//        bus = new Bus();
-
         // Stetho
         Stetho.initializeWithDefaults(context);
 

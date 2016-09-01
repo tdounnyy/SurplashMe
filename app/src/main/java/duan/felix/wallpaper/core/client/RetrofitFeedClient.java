@@ -10,7 +10,6 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 import duan.felix.wallpaper.scaffold.net.Retrofits;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
-import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import rx.Observable;
 import rx.functions.Func1;
@@ -63,9 +62,4 @@ public class RetrofitFeedClient extends FeedClient {
                 });
     }
 
-    @Override
-    public Observable<ResponseBody> downloadPhoto(@NonNull String photoUrl) {
-        // TODO: cache
-        return endpoint.downloadPhoto(photoUrl);
-    }
 }

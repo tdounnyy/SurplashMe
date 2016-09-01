@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.client.Client;
-import okhttp3.ResponseBody;
 import rx.Observable;
 
 /**
@@ -17,6 +16,4 @@ abstract class FeedClient extends Client {
     public abstract Observable<Portion<Photo>> getPhotoList(@NonNull String feedId, Integer page);
 
     public abstract Observable<Photo> getPhoto(@NonNull String photoId);
-
-    public abstract Observable<ResponseBody> downloadPhoto(@NonNull String photoUrl);
 }
