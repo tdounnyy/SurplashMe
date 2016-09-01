@@ -57,6 +57,7 @@ public class WallpaperOperator {
                         result = dataSource.getResult();
                         InputStream inputStream = new PooledByteBufferInputStream(result.get());
                         try {
+                            // TODO: OOM on low end device
                             mWallpaperManager.setStream(inputStream);
                         } catch (IOException e) {
                             e.printStackTrace();

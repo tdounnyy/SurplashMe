@@ -13,12 +13,12 @@ import duan.felix.wallpaper.scaffold.utils.LogUtils;
  */
 
 public class WallPaperChangedReceiver extends BroadcastReceiver {
-    private static final String TAG = "WallPaperChangedReceive";
+    private static final String TAG = "WallPaperChangedReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: make a toast to restore previous wallpaper
-        LogUtils.d(TAG, "WallPaperChanged");
+        LogUtils.d(TAG, "changed");
         Bus.post(new ToastEvent("Wallpaper changed"));
     }
 }

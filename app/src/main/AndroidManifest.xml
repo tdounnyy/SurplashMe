@@ -25,11 +25,6 @@
 
         <activity android:name=".browser.BrowserActivity" />
 
-        <receiver android:name=".receiver.WallPaperChangedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
