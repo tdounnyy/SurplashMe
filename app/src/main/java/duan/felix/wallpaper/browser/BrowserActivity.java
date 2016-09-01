@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.core.client.FeedClient;
+import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
@@ -36,7 +36,7 @@ public class BrowserActivity extends Activity {
     SimpleDraweeView mPhotoView;
 
     @Inject
-    FeedClient mFeedClient;
+    RetrofitFeedClient mFeedClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

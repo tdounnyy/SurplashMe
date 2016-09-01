@@ -42,6 +42,6 @@ public class Global {
         // TODO: can be simpler using create()
         Injector = DaggerDIModule_DIComponent
                 .builder()
-                .dIModule(new DIModule()).build();
+                .dIModule(new DIModule(context)).build();
     }
 }

@@ -1,12 +1,16 @@
 package duan.felix.wallpaper.scaffold.dagger2;
 
+import android.app.WallpaperManager;
+import android.content.Context;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import duan.felix.wallpaper.browser.BrowserActivity;
-import duan.felix.wallpaper.core.client.FeedClient;
+import duan.felix.wallpaper.core.client.RetrofitFeedClient;
+import duan.felix.wallpaper.core.worker.WallpaperOperator;
 import duan.felix.wallpaper.feed.FeedSource;
 
 /**
@@ -15,13 +19,22 @@ import duan.felix.wallpaper.feed.FeedSource;
 @Module
 public class DIModule {
 
-    public DIModule() {
+    private final Context baseContext;
+
+    public DIModule(Context context) {
+        baseContext = context;
     }
 
     @Provides
     @Singleton
-    FeedClient provideFeedClient() {
-        return new FeedClient();
+    RetrofitFeedClient provideFeedClient() {
+        return new RetrofitFeedClient();
+    }
+
+    @Provides
+    @Singleton
+    WallpaperManager provideWallPaperManager() {
+        return WallpaperManager.getInstance(baseContext);
     }
 
     /**
@@ -31,6 +44,8 @@ public class DIModule {
     @Component(modules = DIModule.class)
     public interface DIComponent {
         void inject(FeedSource feedSource);
+
+        void inject(WallpaperOperator op);
 
         void inject(BrowserActivity activity);
     }

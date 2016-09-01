@@ -11,9 +11,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.browser.BrowserActivity;
 import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
+import duan.felix.wallpaper.core.worker.WallpaperOperator;
 
 /**
  * @author Felix.Duan.
@@ -23,6 +22,7 @@ public class FeedListItemView extends LinearLayout {
 
     private static final String TAG = "FeedListItemView";
 
+    // TODO: make aspect ratio as screen ratio
     @BindView(R.id.photo_item)
     SimpleDraweeView mDraweeView;
 
@@ -44,7 +44,8 @@ public class FeedListItemView extends LinearLayout {
 
     @OnClick(R.id.list_item_container)
     public void clickOnItemView() {
-        BrowserActivity.startWith(getContext(), mPhoto.id);
+//        BrowserActivity.startWith(getContext(), mPhoto.id);
+        new WallpaperOperator().setWallpaper(mPhoto);
     }
 
     public void setPhoto(Photo photo) {

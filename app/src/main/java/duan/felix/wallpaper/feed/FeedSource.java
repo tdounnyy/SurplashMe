@@ -2,7 +2,7 @@ package duan.felix.wallpaper.feed;
 
 import javax.inject.Inject;
 
-import duan.felix.wallpaper.core.client.FeedClient;
+import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.list.ListSource;
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
@@ -21,7 +21,7 @@ public class FeedSource extends ListSource<Photo> {
     private static final String TAG = "FeedSource";
 
     @Inject
-    FeedClient mClient;
+    RetrofitFeedClient mClient;
     private String feedId = null;
 
     public FeedSource(String feedId) {

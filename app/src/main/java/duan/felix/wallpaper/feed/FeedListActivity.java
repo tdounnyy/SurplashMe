@@ -10,6 +10,8 @@ import duan.felix.wallpaper.core.model.Feed;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
+ * TODO make fullscreen & float
+ *
  * @author Felix.Duan.
  */
 

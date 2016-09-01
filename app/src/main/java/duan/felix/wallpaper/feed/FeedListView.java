@@ -14,7 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
  * @author Felix.Duan.
