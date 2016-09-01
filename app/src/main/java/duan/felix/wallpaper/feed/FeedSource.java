@@ -11,7 +11,7 @@ import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.Observable;
 
 /**
- * TODO load from cache
+ * TODO:** load from cache
  *
  * @author Felix.Duan.
  */

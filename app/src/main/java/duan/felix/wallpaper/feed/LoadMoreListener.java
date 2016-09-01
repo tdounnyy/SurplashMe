@@ -14,7 +14,7 @@ class LoadMoreListener extends RecyclerView.OnScrollListener {
     private final int threshold;
     private LinearLayoutManager layoutManager;
 
-    // TODO: load direction
+    // TODO:** load direction
     LoadMoreListener(int threshold) {
         this.threshold = threshold;
     }

@@ -17,7 +17,7 @@ public class WallPaperChangedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: make a toast to restore previous wallpaper
+        // TODO:* make a toast to restore previous wallpaper
         LogUtils.d(TAG, "changed");
         Bus.post(new ToastEvent("Wallpaper changed"));
     }

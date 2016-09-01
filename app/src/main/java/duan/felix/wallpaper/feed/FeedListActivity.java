@@ -10,7 +10,7 @@ import duan.felix.wallpaper.scaffold.app.BaseActivity;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
- * TODO make fullscreen & float
+ * TODO:*** make fullscreen & float
  *
  * @author Felix.Duan.
  */

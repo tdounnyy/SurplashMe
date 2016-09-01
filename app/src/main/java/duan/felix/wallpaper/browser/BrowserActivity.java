@@ -52,7 +52,7 @@ public class BrowserActivity extends Activity {
         loadPhoto(invokeIntent.getStringExtra(PHOTO_ID));
     }
 
-    // TODO Make a cancelable Action
+    // TODO: ** Make a cancelable Action
     private void loadPhoto(final String photoId) {
         if (!StringUtils.isEmpty(photoId)) {
             mFeedClient.getPhoto(photoId)
