@@ -1,8 +1,7 @@
 package duan.felix.wallpaper.browser;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Dialog;
 import android.os.Bundle;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -11,6 +10,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.model.Photo;
@@ -24,15 +24,15 @@ import rx.functions.Action1;
  * @author Felix.Duan.
  */
 
-public class BrowserActivity extends Activity {
+public class FloatActivity extends Activity {
 
-    private static final String TAG = "BrowserActivity";
+    private static final String TAG = "FloatActivity";
 
     private static final String PHOTO_ID = "photo_id";
 
     private Photo mPhoto;
 
-    @BindView(R.id.photo_view)
+    @BindView(R.id.photo)
     SimpleDraweeView mPhotoView;
 
     @Inject
@@ -42,14 +42,15 @@ public class BrowserActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Global.Injector.inject(this);
-        setContentView(R.layout.activity_browser);
+        setContentView(R.layout.activity_float);
         ButterKnife.bind(this);
         init();
     }
 
     private void init() {
-        Intent invokeIntent = getIntent();
-        loadPhoto(invokeIntent.getStringExtra(PHOTO_ID));
+//        Intent invokeIntent = getIntent();
+//        loadPhoto(invokeIntent.getStringExtra(PHOTO_ID));
+        loadPhoto("LTIYWSBbhEI");
     }
 
     // TODO: ** Make a cancelable Action
@@ -76,11 +77,25 @@ public class BrowserActivity extends Activity {
         mPhotoView.setImageURI(mPhoto.urls.regular);
     }
 
-    public static void startWith(Context context, String photoId) {
-        if (!StringUtils.isEmpty(photoId)) {
-            Intent intent = new Intent(context, BrowserActivity.class);
-            intent.putExtra(PHOTO_ID, photoId);
-            context.startActivity(intent);
-        }
+    @OnClick(R.id.photo)
+    public void photoClicked() {
+//        new WallpaperOperator().setWallpaper(mPhoto);
+
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+
+
+        Dialog fullDialog = new Dialog(this, R.style.FullscreenDialog);
+        fullDialog.setContentView(R.layout.dummy);
+        fullDialog.show();
     }
+//    public static void startWith(Context context, String photoId) {
+//        if (!StringUtils.isEmpty(photoId)) {
+//            Intent intent = new Intent(context, FloatActivity.class);
+//            intent.putExtra(PHOTO_ID, photoId);
+//            context.startActivity(intent);
+//        }
+//    }
 }

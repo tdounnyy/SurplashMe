@@ -44,7 +44,6 @@ public class FeedListItemView extends LinearLayout {
 
     @OnClick(R.id.list_item_container)
     public void clickOnItemView() {
-//        BrowserActivity.startWith(getContext(), mPhoto.id);
         new WallpaperOperator().setWallpaper(mPhoto);
     }
 
