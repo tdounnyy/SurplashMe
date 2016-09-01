@@ -80,6 +80,7 @@ public class FeedListView extends LinearLayout {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Photo photo = items.get(position);
+            // TODO: prefetch
             holder.setPhoto(photo);
         }
 

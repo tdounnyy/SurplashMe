@@ -1,12 +1,12 @@
 package duan.felix.wallpaper.feed;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Feed;
+import duan.felix.wallpaper.scaffold.app.BaseActivity;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
@@ -15,7 +15,7 @@ import duan.felix.wallpaper.scaffold.utils.LogUtils;
  * @author Felix.Duan.
  */
 
-public class FeedListActivity extends Activity {
+public class FeedListActivity extends BaseActivity {
 
     private static final String TAG = "FeedListActivity";
     private FeedListPresenter mListPresenter;
@@ -57,4 +57,5 @@ public class FeedListActivity extends Activity {
         LogUtils.d(TAG, "onStop");
         mListPresenter.onStart();
     }
+
 }

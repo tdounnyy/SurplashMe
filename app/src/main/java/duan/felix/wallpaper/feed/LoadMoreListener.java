@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import duan.felix.wallpaper.core.event.LoadAfterEvent;
-import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.event.Bus;
 
 /**
  * @author Felix.Duan.
@@ -35,7 +35,7 @@ class LoadMoreListener extends RecyclerView.OnScrollListener {
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
         int itemCount = layoutManager.getItemCount();
         if (lastVisibleItemPosition + threshold >= itemCount) {
-            Global.bus.post(new LoadAfterEvent());
+            Bus.post(new LoadAfterEvent());
         }
 
     }

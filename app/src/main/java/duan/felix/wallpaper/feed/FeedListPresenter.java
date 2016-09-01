@@ -1,15 +1,14 @@
 package duan.felix.wallpaper.feed;
 
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import duan.felix.wallpaper.core.event.LoadAfterEvent;
 import duan.felix.wallpaper.core.event.RefreshEvent;
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Feed;
 import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -58,7 +57,7 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
     public void tryInit() {
         if (mInit) {
             mInit = false;
-            Global.bus.post(new RefreshEvent());
+            Bus.post(new RefreshEvent());
         }
     }
 
@@ -86,12 +85,12 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
 
     @Override
     public void onResume() {
-        Global.bus.register(this);
+        Bus.register(this);
         tryInit();
     }
 
     @Override
     public void onPause() {
-        Global.bus.unregister(this);
+        Bus.unregister(this);
     }
 }

@@ -9,6 +9,7 @@ import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 import duan.felix.wallpaper.scaffold.net.Retrofits;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import rx.Observable;
@@ -38,6 +39,7 @@ public class RetrofitFeedClient extends FeedClient {
                 .onErrorReturn(new Func1<Throwable, List<Photo>>() {
                     @Override
                     public List<Photo> call(Throwable throwable) {
+                        LogUtils.e(TAG, "getPhotoList fail", throwable);
                         return new ArrayList<>();
                     }
                 })

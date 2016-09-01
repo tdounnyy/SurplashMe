@@ -6,7 +6,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.stetho.Stetho;
-import com.squareup.otto.Bus;
 
 import duan.felix.wallpaper.scaffold.dagger2.DIModule;
 import duan.felix.wallpaper.scaffold.dagger2.DaggerDIModule_DIComponent;
@@ -18,7 +17,6 @@ import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 
 public class Global {
 
-    public static Bus bus;
     public static DIModule.DIComponent Injector;
     public static Context App;
 
@@ -33,7 +31,7 @@ public class Global {
         Fresco.initialize(context, config);
 
         // Otto
-        bus = new Bus();
+//        bus = new Bus();
 
         // Stetho
         Stetho.initializeWithDefaults(context);

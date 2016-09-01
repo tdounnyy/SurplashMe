@@ -2,6 +2,16 @@ package duan.felix.wallpaper.core.worker;
 
 import android.app.WallpaperManager;
 
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.BaseDataSubscriber;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imagepipeline.request.ImageRequest;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,11 +21,6 @@ import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
-import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author Felix.Duan.
@@ -24,6 +29,8 @@ import rx.schedulers.Schedulers;
 public class WallpaperOperator {
 
     private static final String TAG = "WallpaperOperator";
+
+    CloseableReference<PooledByteBuffer> result = null;
 
     @Inject
     WallpaperManager mWallpaperManager;
@@ -36,36 +43,36 @@ public class WallpaperOperator {
     }
 
     public void setWallpaper(Photo photo) {
-        Observable.just(photo.urls.full)
-                .subscribeOn(Schedulers.io())
-                .flatMap(new Func1<String, Observable<InputStream>>() {
+        ImagePipeline ipp = Fresco.getImagePipeline();
+        DataSource<CloseableReference<PooledByteBuffer>> source =
+                ipp.fetchEncodedImage(ImageRequest.fromUri(photo.urls.full), WallpaperOperator.this);
+        BaseDataSubscriber<CloseableReference<PooledByteBuffer>> subscriber =
+                new BaseDataSubscriber<CloseableReference<PooledByteBuffer>>() {
+
                     @Override
-                    public Observable<InputStream> call(String urlString) {
-                        LogUtils.d(TAG, urlString);
-                        return mFeedClient.downloadPhoto(urlString)
-                                .map(new Func1<ResponseBody, InputStream>() {
-                                    @Override
-                                    public InputStream call(ResponseBody response) {
-                                        return response.byteStream();
-                                    }
-                                });
-                    }
-                })
-                .subscribe(new Action1<InputStream>() {
-                    @Override
-                    public void call(InputStream inputStream) {
+                    protected void onNewResultImpl(DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
+                        if (!dataSource.isFinished()) {
+                            return;
+                        }
+                        result = dataSource.getResult();
+                        InputStream inputStream = new PooledByteBufferInputStream(result.get());
                         try {
                             mWallpaperManager.setStream(inputStream);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            LogUtils.e(TAG, "setWallpaper() setStream fail", e);
+                        } finally {
+                            result.close();
+                            result = null;
                         }
                     }
-                }, new Action1<Throwable>() {
+
                     @Override
-                    public void call(Throwable throwable) {
-                        LogUtils.e(TAG, "setWallpaper err:", throwable);
+                    protected void onFailureImpl(DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
+                        LogUtils.e(TAG, "setWallpaper() fetch photo fail", dataSource.getFailureCause());
                     }
-                });
+                };
+        source.subscribe(subscriber, new DefaultExecutorSupplier(2).forBackgroundTasks());
     }
 
 }
