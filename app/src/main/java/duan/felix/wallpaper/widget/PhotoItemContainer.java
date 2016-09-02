@@ -17,7 +17,6 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.helper.DisplayInfo;
 import duan.felix.wallpaper.scaffold.app.Global;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
  * @author Felix.Duan.
@@ -45,7 +44,6 @@ public class PhotoItemContainer extends LinearLayout {
         this(context, attrs, 0);
     }
 
-    // TODO: ** recycle this view
     public PhotoItemContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         Global.Injector.inject(this);
@@ -63,7 +61,6 @@ public class PhotoItemContainer extends LinearLayout {
 
     public void setPhoto(Photo photo) {
         mPhoto = photo;
-        LogUtils.d(TAG, "setPhoto\n" + photo.urls.regular + "\n" + photo.urls.full);
         mDraweeView.setImageURI(mPhoto.urls.regular);
     }
 

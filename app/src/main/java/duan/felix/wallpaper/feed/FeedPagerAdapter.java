@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
@@ -18,30 +20,31 @@ import duan.felix.wallpaper.widget.PhotoItemContainer;
  * @author Felix.Duan.
  */
 
-public class FeedPagerAdapter extends PagerAdapter {
+class FeedPagerAdapter extends PagerAdapter {
 
     private static final String TAG = "FeedPagerAdapter";
 
     private List<Photo> mItems = null;
 
-    public void setViewPager(ViewPager pager) {
+    private Queue<PhotoItemContainer> mRecyclerPool = new ArrayDeque<>();
+
+    void setViewPager(ViewPager pager) {
         pager.setAdapter(this);
     }
 
-    public void setItems(List<Photo> items) {
+    void setItems(List<Photo> items) {
         LogUtils.d(TAG, "setItems " + items.size());
         mItems = items;
         notifyDataSetChanged();
     }
 
-    public void appendItems(List<Photo> items) {
+    void appendItems(List<Photo> items) {
         mItems.addAll(items);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        LogUtils.d(TAG, "getCount " + (mItems == null ? 0 : mItems.size()));
         return mItems == null ? 0 : mItems.size();
     }
 
@@ -52,14 +55,18 @@ public class FeedPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        PhotoItemContainer v = (PhotoItemContainer) LayoutInflater.from(container.getContext()).inflate(R.layout.photo_item, container, false);
-        v.setPhoto(mItems.get(position));
-        container.addView(v);
-        return v;
+        PhotoItemContainer view = mRecyclerPool.poll();
+        if (view == null) {
+            view = (PhotoItemContainer) LayoutInflater.from(container.getContext()).inflate(R.layout.photo_item, container, false);
+        }
+        view.setPhoto(mItems.get(position));
+        container.addView(view);
+        return view;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+        mRecyclerPool.offer((PhotoItemContainer) object);
     }
 }
