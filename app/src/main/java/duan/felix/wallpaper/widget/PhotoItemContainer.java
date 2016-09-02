@@ -20,9 +20,8 @@ import duan.felix.wallpaper.core.worker.WallpaperWorker;
 
 public class PhotoItemContainer extends LinearLayout {
 
-    private static final String TAG = "FeedListItemView";
+    private static final String TAG = "PhotoItemContainer";
 
-    // TODO: *** make aspect ratio as screen ratio
     @BindView(R.id.photo_item)
     SimpleDraweeView mDraweeView;
 
