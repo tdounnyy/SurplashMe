@@ -9,11 +9,16 @@ import android.view.View;
 import android.view.WindowManager;
 
 import duan.felix.wallpaper.R;
+import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
+import duan.felix.wallpaper.widget.PhotoItemContainer;
 
 public class FloatService extends Service {
 
     private static final String TAG = "FloatService";
+
+    public static final String EXTRA_PHOTO = "extra_photo";
+
     private WindowManager manager;
 
     @Override
@@ -27,20 +32,16 @@ public class FloatService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtils.d(TAG, "onStartCommand");
 
-        final View view = buildFloatView();
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                manager.removeView(view);
-            }
-        });
+        Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
+        addFloatView(photo);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private View buildFloatView() {
+    private View addFloatView(Photo photo) {
 
-        View view = LayoutInflater.from(this).inflate(R.layout.dummy, null);
+        PhotoItemContainer view = (PhotoItemContainer) LayoutInflater.from(this).inflate(R.layout.photo_item, null);
+        view.setFloating(true);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -51,6 +52,7 @@ public class FloatService extends Service {
                         | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
                 PixelFormat.TRANSLUCENT);
         manager.addView(view, params);
+        view.setPhoto(photo);
         return view;
     }
 

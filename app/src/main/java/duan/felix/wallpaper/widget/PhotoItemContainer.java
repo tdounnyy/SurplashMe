@@ -1,8 +1,10 @@
 package duan.felix.wallpaper.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -17,6 +19,7 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.helper.DisplayInfo;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.service.FloatService;
 
 /**
  * @author Felix.Duan.
@@ -35,6 +38,8 @@ public class PhotoItemContainer extends LinearLayout {
     SimpleDraweeView mDraweeView;
 
     private Photo mPhoto;
+
+    private boolean mFloating = false;
 
     public PhotoItemContainer(Context context) {
         this(context, null, 0);
@@ -57,6 +62,24 @@ public class PhotoItemContainer extends LinearLayout {
     @OnClick(R.id.photo_item_container)
     public void clickOnItemView() {
         mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
+
+        if (mFloating) {
+            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            manager.removeView(this);
+        } else {
+            Intent intent = new Intent(getContext(), FloatService.class);
+            intent.putExtra(FloatService.EXTRA_PHOTO, mPhoto);
+            getContext().startService(intent);
+        }
+    }
+
+    public boolean isFloating() {
+        return mFloating;
+    }
+
+    public void setFloating(boolean floating) {
+        mFloating = floating;
+        setAlpha(mFloating ? 0.5f : 1f);
     }
 
     public void setPhoto(Photo photo) {
