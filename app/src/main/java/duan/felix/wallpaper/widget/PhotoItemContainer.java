@@ -1,4 +1,4 @@
-package duan.felix.wallpaper.feed;
+package duan.felix.wallpaper.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,13 +12,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.core.worker.WallpaperOperator;
+import duan.felix.wallpaper.core.worker.WallpaperWorker;
 
 /**
  * @author Felix.Duan.
  */
 
-public class FeedListItemView extends LinearLayout {
+public class PhotoItemContainer extends LinearLayout {
 
     private static final String TAG = "FeedListItemView";
 
@@ -28,23 +28,23 @@ public class FeedListItemView extends LinearLayout {
 
     private Photo mPhoto;
 
-    public FeedListItemView(Context context) {
+    public PhotoItemContainer(Context context) {
         this(context, null, 0);
     }
 
-    public FeedListItemView(Context context, AttributeSet attrs) {
+    public PhotoItemContainer(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FeedListItemView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PhotoItemContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.photo_item, this);
+        LayoutInflater.from(context).inflate(R.layout.photo_view, this);
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.list_item_container)
+    @OnClick(R.id.photo_item_container)
     public void clickOnItemView() {
-        new WallpaperOperator().setWallpaper(mPhoto);
+        new WallpaperWorker().setWallpaper(mPhoto);
     }
 
     public void setPhoto(Photo photo) {

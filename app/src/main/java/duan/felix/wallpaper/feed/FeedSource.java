@@ -23,6 +23,7 @@ public class FeedSource extends ListSource<Photo> {
     @Inject
     RetrofitFeedClient mClient;
     private String feedId = null;
+    private int page = 1;
 
     public FeedSource(String feedId) {
         Global.Injector.inject(this);
@@ -32,17 +33,18 @@ public class FeedSource extends ListSource<Photo> {
     @Override
     public Observable<Portion<Photo>> refresh() {
         LogUtils.d(TAG, "refresh");
-        return mClient.getPhotoList(feedId, null);
-    }
-
-    @Override
-    public Observable<Portion<Photo>> loadAfter(int page) {
-        LogUtils.d(TAG, "loadAfter" + page);
+        page = 1;
         return mClient.getPhotoList(feedId, page);
     }
 
     @Override
-    public Observable<Portion<Photo>> loadBefore(int page) {
+    public Observable<Portion<Photo>> loadAfter() {
+        LogUtils.d(TAG, "loadAfter" + ++page);
+        return mClient.getPhotoList(feedId, page);
+    }
+
+    @Override
+    public Observable<Portion<Photo>> loadBefore() {
         LogUtils.d(TAG, "loadBefore" + page);
         return mClient.getPhotoList(feedId, page);
     }

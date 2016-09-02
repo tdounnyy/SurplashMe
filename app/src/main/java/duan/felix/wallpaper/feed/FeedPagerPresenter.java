@@ -1,14 +1,22 @@
 package duan.felix.wallpaper.feed;
 
-import org.greenrobot.eventbus.Subscribe;
+import android.app.Activity;
+import android.content.Context;
+import android.support.v4.view.ViewPager;
 
-import duan.felix.wallpaper.core.event.LoadAfterEvent;
-import duan.felix.wallpaper.core.event.RefreshEvent;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import duan.felix.wallpaper.core.event.InvokeHomeEvent;
+import duan.felix.wallpaper.scaffold.event.LoadAfterEvent;
+import duan.felix.wallpaper.scaffold.event.RefreshEvent;
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Feed;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
+import duan.felix.wallpaper.scaffold.utils.ActivityStarter;
+import duan.felix.wallpaper.scaffold.utils.ToastUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -16,18 +24,21 @@ import rx.functions.Action1;
  * @author Felix.Duan.
  */
 
-public class FeedListPresenter extends Presenter<Feed, FeedListView> {
+public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
 
-    private static final String TAG = "FeedListPresenter";
-    private Feed mFeed;
-    private int page = 1;
-    private FeedListView mListView;
     private FeedSource mFeedSource;
+    private Context mContext;
+    private Feed mFeed;
+    private ViewPager mViewPager;
+    private FeedPagerAdapter mPagerAdapter;
     private boolean mInit = true;
 
-    public FeedListPresenter(Feed feed, FeedListView listView) {
-        this.mFeed = feed;
-        this.mListView = listView;
+    public FeedPagerPresenter(Feed feed, ViewPager viewPager) {
+        mContext = viewPager.getContext();
+        mFeed = feed;
+        mViewPager = viewPager;
+        mPagerAdapter = new FeedPagerAdapter();
+        mPagerAdapter.setViewPager(mViewPager);
         mFeedSource = new FeedSource(mFeed.id);
     }
 
@@ -37,21 +48,27 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
                 .subscribe(new Action1<Portion<Photo>>() {
                     @Override
                     public void call(Portion<Photo> photos) {
-                        mListView.setItems(photos.items);
-                        page = 1;
+                        mPagerAdapter.setItems(photos.items);
                     }
                 });
     }
 
     @Subscribe
     public void performLoadAfter(LoadAfterEvent e) {
-        mFeedSource.loadAfter(++page).observeOn(AndroidSchedulers.mainThread())
+        mFeedSource.loadAfter().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Portion<Photo>>() {
                     @Override
                     public void call(Portion<Photo> photos) {
-                        mListView.appendItems(photos.items);
+                        mPagerAdapter.appendItems(photos.items);
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void performHomeApp(InvokeHomeEvent e) {
+        ToastUtils.toast(mContext, "launch home");
+        // TODO: *** make seamless transition
+        ActivityStarter.launchHomeApp((Activity) mContext);
     }
 
     public void tryInit() {
@@ -63,14 +80,18 @@ public class FeedListPresenter extends Presenter<Feed, FeedListView> {
 
     @Override
     public void bind() {
+
     }
 
     @Override
     public void unbind() {
         mFeed = null;
-        mListView = null;
+        mViewPager.setAdapter(null);
+        mViewPager = null;
+        mPagerAdapter = null;
         mFeedSource = null;
         mInit = true;
+
     }
 
     @Override

@@ -17,6 +17,6 @@ public class LogUtils {
 
     public static void e(String tag, String msg, Throwable throwable) {
         Log.e(tag, msg, throwable);
-        Bus.post(new ToastEvent(String.format("Err at %s: %s", tag)));
+        Bus.post(new ToastEvent(String.format("Err at %s: %s", tag, throwable)));
     }
 }

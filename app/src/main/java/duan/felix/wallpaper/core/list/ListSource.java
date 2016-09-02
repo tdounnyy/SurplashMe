@@ -10,8 +10,9 @@ public abstract class ListSource<T> {
 
     public abstract Observable<Portion<T>> refresh();
 
-    public abstract Observable<Portion<T>> loadAfter(int page);
+    public abstract Observable<Portion<T>> loadAfter();
 
-    public abstract Observable<Portion<T>> loadBefore(int page);
+    // TODO:* buggy
+    public abstract Observable<Portion<T>> loadBefore();
 
 }

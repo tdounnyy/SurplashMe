@@ -3,6 +3,7 @@ package duan.felix.wallpaper.scaffold.app;
 import android.app.Activity;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.event.ToastEvent;
@@ -25,8 +26,9 @@ public class BaseActivity extends Activity {
         Bus.unregister(this);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void performToast(ToastEvent e) {
         ToastUtils.toast(this, e.msg);
     }
+
 }

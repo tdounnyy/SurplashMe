@@ -26,9 +26,9 @@ import duan.felix.wallpaper.scaffold.utils.LogUtils;
  * @author Felix.Duan.
  */
 
-public class WallpaperOperator {
+public class WallpaperWorker {
 
-    private static final String TAG = "WallpaperOperator";
+    private static final String TAG = "WallpaperWorker";
 
     CloseableReference<PooledByteBuffer> result = null;
 
@@ -38,14 +38,14 @@ public class WallpaperOperator {
     @Inject
     RetrofitFeedClient mFeedClient;
 
-    public WallpaperOperator() {
+    public WallpaperWorker() {
         Global.Injector.inject(this);
     }
 
     public void setWallpaper(Photo photo) {
         ImagePipeline ipp = Fresco.getImagePipeline();
         DataSource<CloseableReference<PooledByteBuffer>> source =
-                ipp.fetchEncodedImage(ImageRequest.fromUri(photo.urls.full), WallpaperOperator.this);
+                ipp.fetchEncodedImage(ImageRequest.fromUri(photo.urls.full), WallpaperWorker.this);
         BaseDataSubscriber<CloseableReference<PooledByteBuffer>> subscriber =
                 new BaseDataSubscriber<CloseableReference<PooledByteBuffer>>() {
 

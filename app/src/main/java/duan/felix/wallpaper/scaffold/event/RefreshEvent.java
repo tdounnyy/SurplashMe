@@ -1,4 +1,4 @@
-package duan.felix.wallpaper.core.event;
+package duan.felix.wallpaper.scaffold.event;
 
 import duan.felix.wallpaper.scaffold.event.Event;
 

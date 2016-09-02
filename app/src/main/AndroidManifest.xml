@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".scaffold.app.MyApplication"
@@ -14,22 +15,7 @@
         android:theme="@style/AppTheme"
         >
 
-        <activity
-            android:name=".feed.FeedListActivity"
-            android:label="FeedListActivity"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".browser.FloatActivity"
-            android:label="FloatActivity"
-            >
+        <activity android:name=".feed.FeedGalleryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

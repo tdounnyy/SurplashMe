@@ -8,9 +8,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
-import duan.felix.wallpaper.browser.FloatActivity;
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
-import duan.felix.wallpaper.core.worker.WallpaperOperator;
+import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.feed.FeedSource;
 
 /**
@@ -45,8 +44,6 @@ public class DIModule {
     public interface DIComponent {
         void inject(FeedSource feedSource);
 
-        void inject(WallpaperOperator op);
-
-        void inject(FloatActivity activity);
+        void inject(WallpaperWorker op);
     }
 }
