@@ -42,6 +42,8 @@ public class WallpaperWorker {
         Global.Injector.inject(this);
     }
 
+    // TODO: ** two size of wallpaper
+    // TODO: * use regular instead full if ok
     public void setWallpaper(Photo photo) {
         ImagePipeline ipp = Fresco.getImagePipeline();
         DataSource<CloseableReference<PooledByteBuffer>> source =
