@@ -57,8 +57,8 @@ public class WallpaperWorker {
                         result = dataSource.getResult();
                         InputStream inputStream = new PooledByteBufferInputStream(result.get());
                         try {
-                            // TODO:*** OOM on low end device
-                            // TODO:*** avoid using too large image
+                            // TODO: *** OOM on low end device
+                            // TODO: *** avoid using too large image
                             mWallpaperManager.setStream(inputStream);
                         } catch (IOException e) {
                             e.printStackTrace();

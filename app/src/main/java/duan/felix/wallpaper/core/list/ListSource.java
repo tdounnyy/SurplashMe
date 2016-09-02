@@ -12,7 +12,7 @@ public abstract class ListSource<T> {
 
     public abstract Observable<Portion<T>> loadAfter();
 
-    // TODO:* buggy
+    // TODO: * buggy
     public abstract Observable<Portion<T>> loadBefore();
 
 }

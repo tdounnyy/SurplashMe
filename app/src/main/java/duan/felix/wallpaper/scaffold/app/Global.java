@@ -34,7 +34,7 @@ public class Global {
         Stetho.initializeWithDefaults(context);
 
         // Dagger2
-        // TODO:* can be simpler using create()
+        // TODO: * can be simpler using create()
         Injector = DaggerDIModule_DIComponent
                 .builder()
                 .dIModule(new DIModule(context)).build();

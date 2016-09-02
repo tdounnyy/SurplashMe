@@ -22,7 +22,7 @@ public class PhotoItemContainer extends LinearLayout {
 
     private static final String TAG = "FeedListItemView";
 
-    // TODO:*** make aspect ratio as screen ratio
+    // TODO: *** make aspect ratio as screen ratio
     @BindView(R.id.photo_item)
     SimpleDraweeView mDraweeView;
 
