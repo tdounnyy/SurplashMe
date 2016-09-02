@@ -11,6 +11,7 @@ import dagger.Provides;
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.feed.FeedSource;
+import duan.felix.wallpaper.widget.PhotoItemContainer;
 
 /**
  * @author Felix.Duan.
@@ -36,6 +37,12 @@ public class DIModule {
         return WallpaperManager.getInstance(baseContext);
     }
 
+    @Provides
+    @Singleton
+    WallpaperWorker provideWallpaperWorker() {
+        return new WallpaperWorker();
+    }
+
     /**
      * @author Felix.Duan.
      */
@@ -45,5 +52,7 @@ public class DIModule {
         void inject(FeedSource feedSource);
 
         void inject(WallpaperWorker op);
+
+        void inject(PhotoItemContainer container);
     }
 }
