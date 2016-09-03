@@ -19,7 +19,4 @@ public abstract class ListSource<T> {
 
     protected abstract Observable<List<T>> loadAfter();
 
-    // TODO: * buggy
-    protected abstract Observable<List<T>> loadBefore();
-
 }

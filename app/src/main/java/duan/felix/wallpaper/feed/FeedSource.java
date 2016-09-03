@@ -95,12 +95,6 @@ public class FeedSource extends ListSource<Photo> {
         return mClient.getPhotoList(feedId, page);
     }
 
-    @Override
-    public Observable<List<Photo>> loadBefore() {
-        LogUtils.d(TAG, "loadBefore" + page);
-        return mClient.getPhotoList(feedId, page);
-    }
-
     public void setFeedId(String feedId) {
         this.feedId = feedId == null ? "" : feedId;
     }

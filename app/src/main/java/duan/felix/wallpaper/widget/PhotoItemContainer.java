@@ -3,6 +3,7 @@ package duan.felix.wallpaper.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
@@ -85,8 +86,8 @@ public class PhotoItemContainer extends LinearLayout {
 
     public void setPhoto(Photo photo) {
         mPhoto = photo;
-        setBackgroundColor(Color.parseColor(photo.color));
         mDraweeView.setImageURI(mPhoto.urls.regular);
+        mDraweeView.getHierarchy().setPlaceholderImage(new ColorDrawable(Color.parseColor(photo.color)));
     }
 
 }
