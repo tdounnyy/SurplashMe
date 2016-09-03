@@ -1,5 +1,6 @@
 package duan.felix.wallpaper.feed;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,16 +15,15 @@ import io.realm.RealmResults;
 import rx.Observable;
 import rx.functions.Func1;
 
+import static duan.felix.wallpaper.scaffold.utils.Constant.LOAD_PER_PAGE;
+
 /**
- *
  * @author Felix.Duan.
  */
 
 public class FeedSource extends ListSource<Photo> {
 
     private static final String TAG = "FeedSource";
-
-    public static final int PER_PAGE = 30;
 
     private Realm realm;
 
@@ -48,19 +48,6 @@ public class FeedSource extends ListSource<Photo> {
     }
 
     @Override
-    public Observable<List<Photo>> loadFromCache() {
-        return realm.where(Photo.class).findAll().asObservable()
-                .limit(PER_PAGE)
-                .map(new Func1<RealmResults<Photo>, List<Photo>>() {
-                    @Override
-                    public List<Photo> call(RealmResults<Photo> photos) {
-                        return photos;
-                    }
-                });
-
-    }
-
-    @Override
     protected Observable<List<Photo>> refresh(boolean forceRemote) {
         LogUtils.d(TAG, "refresh");
         page = 1;
@@ -71,6 +58,23 @@ public class FeedSource extends ListSource<Photo> {
             LogUtils.d(TAG, "cached");
             return loadFromCache();
         }
+    }
+
+    @Override
+    public Observable<List<Photo>> loadFromCache() {
+        return realm.where(Photo.class).findAll().asObservable()
+                .limit(LOAD_PER_PAGE)
+                .map(new Func1<RealmResults<Photo>, List<Photo>>() {
+                    @Override
+                    public List<Photo> call(RealmResults<Photo> photos) {
+                        List<Photo> result = new ArrayList<>(photos.size());
+                        for (Photo p : photos) {
+                            result.add(p);
+                        }
+                        return result;
+                    }
+                });
+
     }
 
     @Override

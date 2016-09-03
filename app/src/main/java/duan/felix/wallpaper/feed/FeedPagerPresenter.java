@@ -25,22 +25,24 @@ import rx.functions.Action1;
  * @author Felix.Duan.
  */
 
-public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
+// TODO: composite presenter
+class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
 
     private FeedSource mFeedSource;
     private Context mContext;
     private Feed mFeed;
     private ViewPager mViewPager;
     private FeedPagerAdapter mPagerAdapter;
+    private FeedLoadMorePresenter mLoadMorePresenter;
     private boolean mInit = true;
 
-    public FeedPagerPresenter(Feed feed, ViewPager viewPager) {
+    FeedPagerPresenter(Feed feed, ViewPager viewPager) {
         mContext = viewPager.getContext();
         mFeed = feed;
         mViewPager = viewPager;
         mPagerAdapter = new FeedPagerAdapter();
-        mPagerAdapter.setViewPager(mViewPager);
         mFeedSource = new FeedSource(mFeed.id);
+        mLoadMorePresenter = new FeedLoadMorePresenter(mViewPager);
     }
 
     @Subscribe
@@ -72,7 +74,22 @@ public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
         ActivityStarter.launchHomeApp((Activity) mContext);
     }
 
-    public void tryInit() {
+    @Override
+    public void onStart() {
+        mLoadMorePresenter.onStart();
+        mPagerAdapter.setViewPager(mViewPager);
+    }
+
+    @Override
+    public void onStop() {
+        mLoadMorePresenter.onStop();
+        mViewPager.setAdapter(null);
+    }
+
+    @Override
+    public void onResume() {
+        mLoadMorePresenter.onResume();
+        Bus.register(this);
         if (mInit) {
             mInit = false;
             Bus.post(new RefreshEvent());
@@ -80,39 +97,8 @@ public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
     }
 
     @Override
-    public void bind() {
-
-    }
-
-    @Override
-    public void unbind() {
-        mFeed = null;
-        mViewPager.setAdapter(null);
-        mViewPager = null;
-        mPagerAdapter = null;
-        mFeedSource = null;
-        mInit = true;
-
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onResume() {
-        Bus.register(this);
-        tryInit();
-    }
-
-    @Override
     public void onPause() {
+        mLoadMorePresenter.onPause();
         Bus.unregister(this);
     }
 }
