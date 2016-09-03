@@ -27,10 +27,10 @@ public class Global {
         // App context
         App = context;
         // Fresco
-        ImagePipelineConfig config =
+        ImagePipelineConfig frescoConfig =
                 OkHttpImagePipelineConfigFactory
                         .newBuilder(context, OkHttpClients.DEFAULT).build();
-        Fresco.initialize(context, config);
+        Fresco.initialize(context, frescoConfig);
 
         // Stetho
         Stetho.initializeWithDefaults(context);
@@ -42,6 +42,9 @@ public class Global {
                 .dIModule(new DIModule(context)).build();
 
         // Realm
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(context).build());
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfig);
     }
 }

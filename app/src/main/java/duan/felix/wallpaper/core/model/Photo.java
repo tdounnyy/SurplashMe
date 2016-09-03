@@ -25,6 +25,8 @@ public class Photo extends RealmObject implements Model, Parcelable {
 
     public int width;
 
+    public String color;
+
     public Photo() {
 
     }
