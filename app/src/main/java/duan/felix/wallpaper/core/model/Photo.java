@@ -39,6 +39,22 @@ public class Photo extends RealmObject implements Model, Parcelable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Photo photo = (Photo) o;
+
+        return id != null ? id.equals(photo.id) : photo.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
     protected Photo(Parcel in) {
         id = in.readString();
         height = in.readInt();

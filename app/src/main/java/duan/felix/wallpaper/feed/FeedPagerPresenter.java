@@ -45,7 +45,7 @@ public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
 
     @Subscribe
     public void performRefresh(RefreshEvent e) {
-        mFeedSource.refresh().observeOn(AndroidSchedulers.mainThread())
+        mFeedSource.refresh(false).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Photo>>() {
                     @Override
                     public void call(List<Photo> photos) {

@@ -15,7 +15,6 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * TODO: *** load from cache
  *
  * @author Felix.Duan.
  */
@@ -26,35 +25,64 @@ public class FeedSource extends ListSource<Photo> {
 
     public static final int PER_PAGE = 30;
 
+    private Realm realm;
+
+
     @Inject
     RetrofitFeedClient mClient;
     private String feedId = null;
     private int page = 1;
 
-    public FeedSource(String feedId) {
+    FeedSource(String feedId) {
         Global.Injector.inject(this);
         setFeedId(feedId);
+        realm = Realm.getDefaultInstance();
+    }
+
+    private void updateCache(List<Photo> photos) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.delete(Photo.class);
+        realm.copyToRealmOrUpdate(photos);
+        realm.commitTransaction();
     }
 
     @Override
-    public Observable<List<Photo>> refresh() {
+    public Observable<List<Photo>> loadFromCache() {
+        return realm.where(Photo.class).findAll().asObservable()
+                .limit(PER_PAGE)
+                .map(new Func1<RealmResults<Photo>, List<Photo>>() {
+                    @Override
+                    public List<Photo> call(RealmResults<Photo> photos) {
+                        return photos;
+                    }
+                });
+
+    }
+
+    @Override
+    protected Observable<List<Photo>> refresh(boolean forceRemote) {
         LogUtils.d(TAG, "refresh");
         page = 1;
-        RealmResults<Photo> realmResults = Realm.getDefaultInstance().where(Photo.class).findAll();
-        if (false&&!realmResults.isEmpty()) {
-            LogUtils.d(TAG, "cached");
-            return realmResults.asObservable()
-                    .limit(PER_PAGE)
-                    .map(new Func1<RealmResults<Photo>, List<Photo>>() {
-                        @Override
-                        public List<Photo> call(RealmResults<Photo> photos) {
-                            return photos;
-                        }
-                    });
-        } else {
+        if (forceRemote || realm.where(Photo.class).count() == 0) {
             LogUtils.d(TAG, "no cached");
-            return mClient.getPhotoList(feedId, page);
+            return loadFromRemote();
+        } else {
+            LogUtils.d(TAG, "cached");
+            return loadFromCache();
         }
+    }
+
+    @Override
+    protected Observable<List<Photo>> loadFromRemote() {
+        return mClient.getPhotoList(feedId, page)
+                .map(new Func1<List<Photo>, List<Photo>>() {
+                    @Override
+                    public List<Photo> call(List<Photo> photos) {
+                        updateCache(photos);
+                        return photos;
+                    }
+                });
     }
 
     @Override

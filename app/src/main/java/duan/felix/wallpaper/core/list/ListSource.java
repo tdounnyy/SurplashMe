@@ -2,6 +2,7 @@ package duan.felix.wallpaper.core.list;
 
 import java.util.List;
 
+import duan.felix.wallpaper.core.model.Photo;
 import rx.Observable;
 
 /**
@@ -10,11 +11,15 @@ import rx.Observable;
 
 public abstract class ListSource<T> {
 
-    public abstract Observable<List<T>> refresh();
+    protected abstract Observable<List<T>> refresh(boolean forceRemote);
 
-    public abstract Observable<List<T>> loadAfter();
+    protected abstract Observable<List<Photo>> loadFromCache();
+
+    protected abstract Observable<List<Photo>> loadFromRemote();
+
+    protected abstract Observable<List<T>> loadAfter();
 
     // TODO: * buggy
-    public abstract Observable<List<T>> loadBefore();
+    protected abstract Observable<List<T>> loadBefore();
 
 }
