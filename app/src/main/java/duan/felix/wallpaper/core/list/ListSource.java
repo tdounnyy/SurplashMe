@@ -1,5 +1,7 @@
 package duan.felix.wallpaper.core.list;
 
+import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -8,11 +10,11 @@ import rx.Observable;
 
 public abstract class ListSource<T> {
 
-    public abstract Observable<Portion<T>> refresh();
+    public abstract Observable<List<T>> refresh();
 
-    public abstract Observable<Portion<T>> loadAfter();
+    public abstract Observable<List<T>> loadAfter();
 
     // TODO: * buggy
-    public abstract Observable<Portion<T>> loadBefore();
+    public abstract Observable<List<T>> loadBefore();
 
 }

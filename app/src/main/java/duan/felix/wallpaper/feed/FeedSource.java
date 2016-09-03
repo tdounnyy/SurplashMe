@@ -1,10 +1,11 @@
 package duan.felix.wallpaper.feed;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.list.ListSource;
-import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
@@ -36,17 +37,18 @@ public class FeedSource extends ListSource<Photo> {
     }
 
     @Override
-    public Observable<Portion<Photo>> refresh() {
+    public Observable<List<Photo>> refresh() {
         LogUtils.d(TAG, "refresh");
         page = 1;
         RealmResults<Photo> realmResults = Realm.getDefaultInstance().where(Photo.class).findAll();
-        if (!realmResults.isEmpty()) {
+        if (false&&!realmResults.isEmpty()) {
             LogUtils.d(TAG, "cached");
-            return realmResults.asObservable().limit(PER_PAGE)
-                    .map(new Func1<RealmResults<Photo>, Portion<Photo>>() {
+            return realmResults.asObservable()
+                    .limit(PER_PAGE)
+                    .map(new Func1<RealmResults<Photo>, List<Photo>>() {
                         @Override
-                        public Portion<Photo> call(RealmResults<Photo> photos) {
-                            return new Portion<>(photos);
+                        public List<Photo> call(RealmResults<Photo> photos) {
+                            return photos;
                         }
                     });
         } else {
@@ -56,13 +58,13 @@ public class FeedSource extends ListSource<Photo> {
     }
 
     @Override
-    public Observable<Portion<Photo>> loadAfter() {
+    public Observable<List<Photo>> loadAfter() {
         LogUtils.d(TAG, "loadAfter" + ++page);
         return mClient.getPhotoList(feedId, page);
     }
 
     @Override
-    public Observable<Portion<Photo>> loadBefore() {
+    public Observable<List<Photo>> loadBefore() {
         LogUtils.d(TAG, "loadBefore" + page);
         return mClient.getPhotoList(feedId, page);
     }

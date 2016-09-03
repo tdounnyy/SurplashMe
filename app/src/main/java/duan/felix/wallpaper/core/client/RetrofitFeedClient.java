@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.feed.FeedSource;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
@@ -32,7 +31,7 @@ public class RetrofitFeedClient extends FeedClient {
     private static final FeedEndpoint endpoint = retrofit.create(FeedEndpoint.class);
 
     @Override
-    public Observable<Portion<Photo>> getPhotoList(@NonNull String feedId, Integer page) {
+    public Observable<List<Photo>> getPhotoList(@NonNull String feedId, Integer page) {
         return endpoint.getPhotoList(feedId, page, FeedSource.PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .onErrorReturn(new Func1<Throwable, List<Photo>>() {
@@ -42,16 +41,14 @@ public class RetrofitFeedClient extends FeedClient {
                         return new ArrayList<>();
                     }
                 })
-                .flatMap(new Func1<List<Photo>, Observable<Portion<Photo>>>() {
+                .flatMap(new Func1<List<Photo>, Observable<List<Photo>>>() {
                     @Override
-                    public Observable<Portion<Photo>> call(List<Photo> photos) {
+                    public Observable<List<Photo>> call(List<Photo> photos) {
                         Realm realm = Realm.getDefaultInstance();
                         realm.beginTransaction();
-                        for (Photo photo : photos) {
-                            realm.copyToRealm(photo);
-                        }
+                        realm.copyToRealmOrUpdate(photos);
                         realm.commitTransaction();
-                        return Observable.just(new Portion<>(photos));
+                        return Observable.just(photos);
                     }
                 });
     }

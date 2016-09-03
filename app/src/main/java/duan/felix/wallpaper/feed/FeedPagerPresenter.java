@@ -7,13 +7,14 @@ import android.support.v4.view.ViewPager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
 import duan.felix.wallpaper.core.event.InvokeHomeEvent;
-import duan.felix.wallpaper.scaffold.event.LoadAfterEvent;
-import duan.felix.wallpaper.scaffold.event.RefreshEvent;
-import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Feed;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.event.Bus;
+import duan.felix.wallpaper.scaffold.event.LoadAfterEvent;
+import duan.felix.wallpaper.scaffold.event.RefreshEvent;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
 import duan.felix.wallpaper.scaffold.utils.ActivityStarter;
 import duan.felix.wallpaper.scaffold.utils.ToastUtils;
@@ -45,10 +46,10 @@ public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
     @Subscribe
     public void performRefresh(RefreshEvent e) {
         mFeedSource.refresh().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Portion<Photo>>() {
+                .subscribe(new Action1<List<Photo>>() {
                     @Override
-                    public void call(Portion<Photo> photos) {
-                        mPagerAdapter.setItems(photos.items);
+                    public void call(List<Photo> photos) {
+                        mPagerAdapter.setItems(photos);
                     }
                 });
     }
@@ -56,10 +57,10 @@ public class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
     @Subscribe
     public void performLoadAfter(LoadAfterEvent e) {
         mFeedSource.loadAfter().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Portion<Photo>>() {
+                .subscribe(new Action1<List<Photo>>() {
                     @Override
-                    public void call(Portion<Photo> photos) {
-                        mPagerAdapter.appendItems(photos.items);
+                    public void call(List<Photo> photos) {
+                        mPagerAdapter.appendItems(photos);
                     }
                 });
     }
