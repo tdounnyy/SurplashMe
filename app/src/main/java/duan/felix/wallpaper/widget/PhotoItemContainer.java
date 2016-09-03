@@ -21,6 +21,7 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.helper.DisplayInfo;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.utils.StringUtils;
 import duan.felix.wallpaper.service.FloatService;
 
 /**
@@ -61,6 +62,7 @@ public class PhotoItemContainer extends LinearLayout {
         }
     }
 
+    // TODO: *** prevent multiple click
     @OnClick(R.id.photo_item_container)
     public void clickOnItemView() {
         mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
@@ -87,7 +89,10 @@ public class PhotoItemContainer extends LinearLayout {
     public void setPhoto(Photo photo) {
         mPhoto = photo;
         mDraweeView.setImageURI(mPhoto.urls.regular);
-        mDraweeView.getHierarchy().setPlaceholderImage(new ColorDrawable(Color.parseColor(photo.color)));
+        if (!StringUtils.isEmpty(photo.color)) {
+            ColorDrawable drawable = new ColorDrawable(Color.parseColor(photo.color));
+            mDraweeView.getHierarchy().setPlaceholderImage(drawable);
+        }
     }
 
 }
