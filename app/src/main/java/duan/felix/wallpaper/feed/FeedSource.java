@@ -8,7 +8,10 @@ import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * TODO: *** load from cache
@@ -19,6 +22,8 @@ import rx.Observable;
 public class FeedSource extends ListSource<Photo> {
 
     private static final String TAG = "FeedSource";
+
+    public static final int PER_PAGE = 30;
 
     @Inject
     RetrofitFeedClient mClient;
@@ -34,7 +39,20 @@ public class FeedSource extends ListSource<Photo> {
     public Observable<Portion<Photo>> refresh() {
         LogUtils.d(TAG, "refresh");
         page = 1;
-        return mClient.getPhotoList(feedId, page);
+        RealmResults<Photo> realmResults = Realm.getDefaultInstance().where(Photo.class).findAll();
+        if (!realmResults.isEmpty()) {
+            LogUtils.d(TAG, "cached");
+            return realmResults.asObservable().limit(PER_PAGE)
+                    .map(new Func1<RealmResults<Photo>, Portion<Photo>>() {
+                        @Override
+                        public Portion<Photo> call(RealmResults<Photo> photos) {
+                            return new Portion<>(photos);
+                        }
+                    });
+        } else {
+            LogUtils.d(TAG, "no cached");
+            return mClient.getPhotoList(feedId, page);
+        }
     }
 
     @Override

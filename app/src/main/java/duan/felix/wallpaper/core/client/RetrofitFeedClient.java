@@ -7,6 +7,7 @@ import java.util.List;
 
 import duan.felix.wallpaper.core.list.Portion;
 import duan.felix.wallpaper.core.model.Photo;
+import duan.felix.wallpaper.feed.FeedSource;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 import duan.felix.wallpaper.scaffold.net.Retrofits;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
@@ -24,8 +25,6 @@ public class RetrofitFeedClient extends FeedClient {
 
     private static final String TAG = "RetrofitFeedClient";
 
-    private static final int PER_PAGE = 30;
-
     private static final Retrofit retrofit = Retrofits.defaultBuilder()
             .client(OkHttpClients.DEFAULT)
             .build();
@@ -34,7 +33,7 @@ public class RetrofitFeedClient extends FeedClient {
 
     @Override
     public Observable<Portion<Photo>> getPhotoList(@NonNull String feedId, Integer page) {
-        return endpoint.getPhotoList(feedId, page, PER_PAGE)
+        return endpoint.getPhotoList(feedId, page, FeedSource.PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .onErrorReturn(new Func1<Throwable, List<Photo>>() {
                     @Override
