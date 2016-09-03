@@ -10,6 +10,8 @@ import com.facebook.stetho.Stetho;
 import duan.felix.wallpaper.scaffold.dagger2.DIModule;
 import duan.felix.wallpaper.scaffold.dagger2.DaggerDIModule_DIComponent;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * @author Felix.Duan.
@@ -38,5 +40,8 @@ public class Global {
         Injector = DaggerDIModule_DIComponent
                 .builder()
                 .dIModule(new DIModule(context)).build();
+
+        // Realm
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(context).build());
     }
 }

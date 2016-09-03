@@ -5,42 +5,27 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import duan.felix.wallpaper.scaffold.model.Model;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * @author Felix.Duan.
  */
 
-public class Photo implements Model, Parcelable {
+public class Photo extends RealmObject implements Model, Parcelable {
 
     public static final Photo NULL = new Photo();
 
+    @PrimaryKey
     public String id;
-    public Urls urls;
+
+    public PhotoUrls urls;
+
     public int height;
+
     public int width;
 
     public Photo() {
-
-    }
-
-    public class Urls {
-
-        public String raw;
-        public String full;
-        public String regular;
-        public String small;
-        public String thumb;
-
-        @Override
-        public String toString() {
-            return "Urls{" +
-                    "raw='" + raw + '\'' +
-                    ", full='" + full + '\'' +
-                    ", regular='" + regular + '\'' +
-                    ", small='" + small + '\'' +
-                    ", thumb='" + thumb + '\'' +
-                    '}';
-        }
 
     }
 
@@ -58,7 +43,7 @@ public class Photo implements Model, Parcelable {
         id = in.readString();
         height = in.readInt();
         width = in.readInt();
-        urls = new Urls();
+        urls = new PhotoUrls();
         urls.raw = in.readString();
         urls.full = in.readString();
         urls.regular = in.readString();

@@ -10,6 +10,7 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.net.OkHttpClients;
 import duan.felix.wallpaper.scaffold.net.Retrofits;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
+import io.realm.Realm;
 import retrofit2.Retrofit;
 import rx.Observable;
 import rx.functions.Func1;
@@ -45,6 +46,12 @@ public class RetrofitFeedClient extends FeedClient {
                 .flatMap(new Func1<List<Photo>, Observable<Portion<Photo>>>() {
                     @Override
                     public Observable<Portion<Photo>> call(List<Photo> photos) {
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        for (Photo photo : photos) {
+                            realm.copyToRealm(photo);
+                        }
+                        realm.commitTransaction();
                         return Observable.just(new Portion<>(photos));
                     }
                 });
