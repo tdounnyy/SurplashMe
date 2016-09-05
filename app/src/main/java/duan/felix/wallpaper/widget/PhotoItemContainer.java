@@ -62,12 +62,9 @@ public class PhotoItemContainer extends LinearLayout {
     // TODO: *** prevent multiple click
     @OnClick(R.id.photo_item_container)
     public void clickOnItemView() {
-        displayInfo.update(this);
-        mWallpaperWorker.storeViewPhoto(mPhoto, displayInfo);
-        mWallpaperWorker.storeWallpaperSizePhoto(mPhoto);
-        mWallpaperWorker.storeFullSizePhoto(mPhoto);
 
-//        mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
+        displayInfo.update(this);
+        mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
 
 //        if (mFloating) {
 //            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);

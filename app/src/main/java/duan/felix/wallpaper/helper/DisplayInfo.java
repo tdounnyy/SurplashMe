@@ -27,7 +27,7 @@ public class DisplayInfo {
      * NAV:                 screenRect > rootViewRect = appRect
      * TRANSLUCENT_NAV:     screenRect = rootViewRect > appRect
      */
-    enum Type {
+    public enum Type {
         NO_NAV, NAV, TRANSLUCENT_NAV
     }
 

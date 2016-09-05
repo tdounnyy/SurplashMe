@@ -12,7 +12,7 @@ public class Constant {
 
     public interface File {
         String DIR = "felix_wallpaper";
-        String FULL_SIZE = "full_wallpaper.jpg";
+        String ORIGIN_SIZE = "origin_wallpaper.jpg";
         String WALLPAPER_SIZE = "wallpaper_size.jpg";
         String VIEW_SIZE = "view_size.jpg";
     }
