@@ -223,8 +223,10 @@ public class WallpaperWorker {
 
     private void clearPersisted() {
         File dir = new File(Environment.getExternalStorageDirectory(), Constant.File.DIR);
-        for (File f : dir.listFiles()) {
-            f.delete();
+        if (dir.exists()) {
+            for (File f : dir.listFiles()) {
+                f.delete();
+            }
         }
     }
 
