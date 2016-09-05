@@ -11,7 +11,6 @@ public class BitmapUtils {
 
     private static final String TAG = "BitmapUtils";
 
-    // TODO: ** Tall image doesn't fit wide wallpaper as expected
     public static Bitmap cropCenterInside(Bitmap src, Rect rect) {
         int width = Math.min(src.getWidth(), rect.width());
         int height = Math.min(src.getHeight(), rect.height());

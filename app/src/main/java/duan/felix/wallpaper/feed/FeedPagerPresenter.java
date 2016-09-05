@@ -25,7 +25,7 @@ import rx.functions.Action1;
  * @author Felix.Duan.
  */
 
-// TODO: composite presenter
+// TODO: * composite presenter
 class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
 
     private FeedSource mFeedSource;

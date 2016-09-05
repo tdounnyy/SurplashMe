@@ -154,7 +154,6 @@ public class WallpaperWorker {
     }
 
     public Observable<Bitmap> getOriginBitmap(Photo photo) {
-        // TODO: test code
         return getResizedBitmap(photo, null);
     }
 
