@@ -28,7 +28,6 @@ class FeedLoadMorePresenter extends Presenter<Model, ViewPager> implements LoadM
             @Override
             public void onPageSelected(int position) {
                 int count = mViewPager.getAdapter().getCount();
-                LogUtils.d(TAG, "onPageSelected count:" + count + " pos:" + position);
                 if (needLoadMore(count, position)) {
                     loadMore();
                 }
@@ -48,6 +47,7 @@ class FeedLoadMorePresenter extends Presenter<Model, ViewPager> implements LoadM
 
     @Override
     public void loadMore() {
+        LogUtils.d(TAG, "loadMore");
         Bus.post(new LoadAfterEvent());
     }
 

@@ -33,8 +33,7 @@ public class DisplayInfo {
 
     Type mType;
 
-    public DisplayInfo(View view) {
-        update(view);
+    public DisplayInfo() {
     }
 
     public void update(View view) {

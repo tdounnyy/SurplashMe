@@ -9,4 +9,11 @@ public class Constant {
     public static final int LOAD_MORE_THRESHOLD = 5;
 
     public static final int LOAD_PER_PAGE = 30;
+
+    public interface File {
+        String DIR = "felix_wallpaper";
+        String FULL_SIZE = "full_wallpaper.jpg";
+        String WALLPAPER_SIZE = "wallpaper_size.jpg";
+        String VIEW_SIZE = "view_size.jpg";
+    }
 }

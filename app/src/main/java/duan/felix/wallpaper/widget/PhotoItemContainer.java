@@ -1,12 +1,10 @@
 package duan.felix.wallpaper.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -22,7 +20,6 @@ import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.helper.DisplayInfo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.StringUtils;
-import duan.felix.wallpaper.service.FloatService;
 
 /**
  * @author Felix.Duan.
@@ -58,23 +55,28 @@ public class PhotoItemContainer extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.photo_view, this);
         ButterKnife.bind(this);
         if (displayInfo == null) {
-            displayInfo = new DisplayInfo(this);
+            displayInfo = new DisplayInfo();
         }
     }
 
     // TODO: *** prevent multiple click
     @OnClick(R.id.photo_item_container)
     public void clickOnItemView() {
-        mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
+        displayInfo.update(this);
+        mWallpaperWorker.storeViewPhoto(mPhoto, displayInfo);
+        mWallpaperWorker.storeWallpaperSizePhoto(mPhoto);
+        mWallpaperWorker.storeFullSizePhoto(mPhoto);
 
-        if (mFloating) {
-            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            manager.removeView(this);
-        } else {
-            Intent intent = new Intent(getContext(), FloatService.class);
-            intent.putExtra(FloatService.EXTRA_PHOTO, mPhoto);
-            getContext().startService(intent);
-        }
+//        mWallpaperWorker.setWallpaper(mPhoto, displayInfo);
+
+//        if (mFloating) {
+//            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+//            manager.removeView(this);
+//        } else {
+//            Intent intent = new Intent(getContext(), FloatService.class);
+//            intent.putExtra(FloatService.EXTRA_PHOTO, mPhoto);
+//            getContext().startService(intent);
+//        }
     }
 
     public boolean isFloating() {
