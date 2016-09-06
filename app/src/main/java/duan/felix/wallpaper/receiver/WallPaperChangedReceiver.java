@@ -24,13 +24,6 @@ public class WallPaperChangedReceiver extends BroadcastReceiver {
         // TODO: * make a toast to restore previous wallpaper
         LogUtils.d(TAG, "changed");
         Bus.post(new ToastEvent("Wallpaper changed"));
-
-        // TODO: ** move delay into the nice transition process
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Bus.post(new InvokeHomeEvent());
-            }
-        }, LAUNCH_DELAY);
+        Bus.post(new InvokeHomeEvent());
     }
 }
