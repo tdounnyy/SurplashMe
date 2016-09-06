@@ -1,11 +1,13 @@
 package duan.felix.wallpaper.scaffold.app;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.stetho.Stetho;
+import com.squareup.leakcanary.LeakCanary;
 
 import duan.felix.wallpaper.scaffold.dagger2.DIModule;
 import duan.felix.wallpaper.scaffold.dagger2.DaggerDIModule_DIComponent;
@@ -22,7 +24,7 @@ public class Global {
     public static DIModule.DIComponent Injector;
     public static Context App;
 
-    public Global(Context context) {
+    public Global(Application context) {
 
         // App context
         App = context;
@@ -46,5 +48,8 @@ public class Global {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfig);
+
+        LeakCanary.install((Application) context);
+
     }
 }
