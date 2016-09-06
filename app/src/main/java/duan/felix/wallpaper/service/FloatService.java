@@ -24,6 +24,9 @@ import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.widget.FloatPhotoItemContainer;
 
+// TODO: loading spinner
+// TODO: random next
+// TODO: sequence next
 public class FloatService extends Service {
 
     private static final String TAG = "FloatService";
