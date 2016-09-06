@@ -11,6 +11,7 @@ import dagger.Provides;
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.feed.FeedSource;
+import duan.felix.wallpaper.service.FloatService;
 import duan.felix.wallpaper.widget.PhotoItemContainer;
 
 /**
@@ -54,5 +55,7 @@ public class DIModule {
         void inject(WallpaperWorker op);
 
         void inject(PhotoItemContainer container);
+
+        void inject(FloatService service);
     }
 }

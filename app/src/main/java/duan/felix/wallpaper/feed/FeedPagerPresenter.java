@@ -68,7 +68,7 @@ class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void performHomeApp(InvokeHomeEvent e) {
+    public void onHomeInvoked(InvokeHomeEvent e) {
         ToastUtils.toast(mContext, "launch home");
         // TODO: *** make seamless transition
         ActivityStarter.launchHomeApp((Activity) mContext);

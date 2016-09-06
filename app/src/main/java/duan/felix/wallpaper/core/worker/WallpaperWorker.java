@@ -8,6 +8,7 @@ import android.os.Environment;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.BuildConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
@@ -197,8 +198,7 @@ public class WallpaperWorker {
 
     }
 
-    // TODO: ** two size of wallpaper
-    public void setWallpaper(Photo photo, final DisplayInfo info) {
+    public void setWallpaper(Photo photo) {
         LogUtils.d(TAG, "setWallpaper: " + photo);
 
 //        clearPersisted();
@@ -212,7 +212,9 @@ public class WallpaperWorker {
                     public void call(Bitmap bitmap) {
                         try {
                             clearPersisted();
-                            persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
+                            if (BuildConfig.DEBUG) {
+                                persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
+                            }
                             mWallpaperManager.setBitmap(bitmap);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -227,14 +229,6 @@ public class WallpaperWorker {
             for (File f : dir.listFiles()) {
                 f.delete();
             }
-        }
-    }
-
-    private Uri pickImageResolution(Photo photo, DisplayInfo info) {
-        if (info.getScreenRect().width() * info.getScreenRect().height() < 1080 * 1920) {
-            return Uri.parse(photo.urls.regular);
-        } else {
-            return Uri.parse(photo.urls.full);
         }
     }
 
