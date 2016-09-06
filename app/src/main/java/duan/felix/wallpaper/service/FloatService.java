@@ -2,7 +2,7 @@ package duan.felix.wallpaper.service;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -21,10 +21,8 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.event.Bus;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.widget.FloatPhotoItemContainer;
 
-// TODO: loading spinner
 // TODO: random next
 // TODO: sequence next
 public class FloatService extends Service {
@@ -45,13 +43,11 @@ public class FloatService extends Service {
         super.onCreate();
         Global.Injector.inject(this);
         Bus.register(this);
-        LogUtils.d(TAG, "onCreate");
         manager = (WindowManager) getSystemService(WINDOW_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtils.d(TAG, "onStartCommand");
 
         Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
         addFloatView(photo);
@@ -61,10 +57,8 @@ public class FloatService extends Service {
     }
 
     private View addFloatView(Photo photo) {
-        LogUtils.d(TAG, "addFloatView");
-
         mFloatView = (FloatPhotoItemContainer) LayoutInflater
-                .from(this).inflate(R.layout.float_photo_item, null);
+                .from(this).inflate(R.layout.a_float_photo_item, null);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -81,12 +75,26 @@ public class FloatService extends Service {
 
     @Subscribe
     public void onHomeInvoked(InvokeHomeEvent e) {
-        // TODO: *** make seamless transition
-        LogUtils.d(TAG, "onHomeInvoked");
 
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mFloatView.getPhotoView(), "alpha", 1, 0)
-                .setDuration(2000);
+        ValueAnimator animator = ValueAnimator.ofFloat(1, 0)
+                .setDuration(1000);
+
+        final View photoView = mFloatView.getPhotoView();
+        final View progressBar = mFloatView.getProgressBar();
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                photoView.setAlpha(alpha);
+            }
+        });
         animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                progressBar.setVisibility(View.GONE);
+            }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 stopSelf();
@@ -96,15 +104,14 @@ public class FloatService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void onDestroy() {
+        super.onDestroy();
+        mFloatView.selfDetach();
+        Bus.unregister(this);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LogUtils.d(TAG, "onDestroy");
-        mFloatView.selfDetach();
-        Bus.unregister(this);
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

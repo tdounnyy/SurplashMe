@@ -1,23 +1,31 @@
 package duan.felix.wallpaper.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
-import butterknife.OnClick;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.scaffold.utils.LogUtils;
+import duan.felix.wallpaper.core.model.Photo;
 
 /**
  * @author Felix.Duan.
  */
 
-public class FloatPhotoItemContainer extends PhotoItemContainer {
+public class FloatPhotoItemContainer extends RelativeLayout {
 
     private static final String TAG = "FloatPhotoItemContainer";
+
+    @BindView(R.id.photo_item_container)
+    PhotoItemContainer mPhotoContainer;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     public FloatPhotoItemContainer(Context context) {
         this(context, null, 0);
@@ -29,27 +37,28 @@ public class FloatPhotoItemContainer extends PhotoItemContainer {
 
     public FloatPhotoItemContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View v = new View(context);
-        v.setBackgroundColor(Color.RED);
-        v.setAlpha(0.2f);
-        addView(v, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
-    @OnClick(R.id.photo_item_container)
-    public void clickOnItemView() {
-        // ignore click events
-    }
-
-    public View getPhotoView() {
-        return mDraweeView;
+        LayoutInflater.from(context).inflate(R.layout.float_photo_item, this);
+        ButterKnife.bind(this);
+        mPhotoContainer.ignoreClick(true);
     }
 
     public void selfDetach() {
-        LogUtils.d(TAG, "selfDetach");
         if (isAttachedToWindow()) {
             WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             manager.removeView(this);
         }
+    }
+
+    public void setPhoto(Photo photo) {
+        mPhotoContainer.setPhoto(photo);
+    }
+
+    public View getPhotoView() {
+        return mPhotoContainer.getPhotoView();
+    }
+
+    public View getProgressBar() {
+        return mProgressBar;
     }
 }
 

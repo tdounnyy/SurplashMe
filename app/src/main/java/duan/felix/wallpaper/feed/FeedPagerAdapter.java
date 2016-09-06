@@ -57,7 +57,7 @@ class FeedPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         PhotoItemContainer view = mRecyclerPool.poll();
         if (view == null) {
-            view = (PhotoItemContainer) LayoutInflater.from(container.getContext()).inflate(R.layout.photo_item, container, false);
+            view = (PhotoItemContainer) LayoutInflater.from(container.getContext()).inflate(R.layout.a_photo_item, container, false);
         }
         view.setPhoto(mItems.get(position));
         container.addView(view);
