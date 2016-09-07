@@ -17,4 +17,6 @@ abstract class FeedClient extends Client {
     public abstract Observable<List<Photo>> getPhotoList(@NonNull String feedId, Integer page);
 
     public abstract Observable<Photo> getPhoto(@NonNull String photoId);
+
+    public abstract Observable<Photo> getRandomPhoto();
 }

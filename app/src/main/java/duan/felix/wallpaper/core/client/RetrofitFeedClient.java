@@ -55,4 +55,16 @@ public class RetrofitFeedClient extends FeedClient {
                 });
     }
 
+    @Override
+    public Observable<Photo> getRandomPhoto() {
+        return endpoint.getPhoto("random")
+                .subscribeOn(Schedulers.io())
+                .onErrorReturn(new Func1<Throwable, Photo>() {
+                    @Override
+                    public Photo call(Throwable throwable) {
+                        return Photo.NULL;
+                    }
+                });
+    }
+
 }

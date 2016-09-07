@@ -48,13 +48,22 @@ public class Photo extends RealmObject implements Model, Parcelable {
 
         Photo photo = (Photo) o;
 
-        return id != null ? id.equals(photo.id) : photo.id == null;
+        if (height != photo.height) return false;
+        if (width != photo.width) return false;
+        if (id != null ? !id.equals(photo.id) : photo.id != null) return false;
+        if (urls != null ? !urls.equals(photo.urls) : photo.urls != null) return false;
+        return color != null ? color.equals(photo.color) : photo.color == null;
 
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (urls != null ? urls.hashCode() : 0);
+        result = 31 * result + height;
+        result = 31 * result + width;
+        result = 31 * result + (color != null ? color.hashCode() : 0);
+        return result;
     }
 
     protected Photo(Parcel in) {

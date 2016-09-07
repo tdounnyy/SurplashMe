@@ -15,6 +15,7 @@ import duan.felix.wallpaper.scaffold.app.BaseActivity;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 
 /**
+ * TODO style
  * @author Felix.Duan.
  */
 

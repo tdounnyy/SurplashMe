@@ -44,6 +44,11 @@ class FeedPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return mItems == null ? 0 : mItems.size();
     }
