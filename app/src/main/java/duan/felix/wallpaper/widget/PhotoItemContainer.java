@@ -20,6 +20,7 @@ import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.utils.IntentStarter;
 import duan.felix.wallpaper.scaffold.utils.StringUtils;
 import duan.felix.wallpaper.service.FloatService;
 
@@ -63,7 +64,7 @@ public class PhotoItemContainer extends FrameLayout {
         if (mPhoto != null && !mIgnoreClick && mTimer.tryFire()) {
             Intent intent = new Intent(getContext(), FloatService.class);
             intent.putExtra(FloatService.EXTRA_PHOTO, mPhoto);
-            getContext().startService(intent);
+            IntentStarter.startService(getContext(), intent);
         }
     }
 

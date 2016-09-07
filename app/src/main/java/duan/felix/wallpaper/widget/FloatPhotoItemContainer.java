@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.core.event.RequestRandomToastEvent;
+import duan.felix.wallpaper.core.event.ShowFloatButtonEvent;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.scaffold.event.Bus;
 
@@ -94,7 +94,7 @@ public class FloatPhotoItemContainer extends RelativeLayout {
                 public void onAnimationEnd(Animator animation) {
                     mAnimating = false;
                     selfDetach();
-                    Bus.post(new RequestRandomToastEvent());
+                    Bus.post(new ShowFloatButtonEvent());
                 }
             });
             animator.start();

@@ -16,7 +16,7 @@ import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.event.LoadAfterEvent;
 import duan.felix.wallpaper.scaffold.event.RefreshEvent;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
-import duan.felix.wallpaper.scaffold.utils.ActivityStarter;
+import duan.felix.wallpaper.scaffold.utils.IntentStarter;
 import duan.felix.wallpaper.scaffold.utils.ToastUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -70,7 +70,7 @@ class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onHomeInvoked(InvokeHomeEvent e) {
         ToastUtils.toast(mContext, "launch home");
-        ActivityStarter.launchHomeApp((Activity) mContext);
+        IntentStarter.launchHomeApp((Activity) mContext);
     }
 
     @Override

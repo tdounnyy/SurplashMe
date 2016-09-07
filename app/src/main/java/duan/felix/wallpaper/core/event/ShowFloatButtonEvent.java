@@ -6,5 +6,5 @@ import duan.felix.wallpaper.scaffold.event.Event;
  * @author Felix.Duan.
  */
 
-public class RequestRandomToastEvent extends Event {
+public class ShowFloatButtonEvent extends Event {
 }
