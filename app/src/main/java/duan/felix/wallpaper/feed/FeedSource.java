@@ -92,7 +92,7 @@ public class FeedSource extends ListSource<Photo> {
     }
 
     @Override
-    protected Observable<Photo> getRandomPhoto() {
+    public Observable<Photo> getRandomPhoto() {
         return mClient.getRandomPhoto();
     }
 

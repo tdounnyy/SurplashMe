@@ -23,6 +23,7 @@ import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.widget.FloatPhotoItemContainer;
+import rx.functions.Action1;
 
 // TODO: random next
 // TODO: sequence next
@@ -79,11 +80,19 @@ public class FloatService extends Service {
 
     private View addRandomPhotoToast() {
         final Button button = new Button(this);
+        button.setText("Random change wallpaper");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LogUtils.d(TAG, "button click");
-                manager.removeViewImmediate(button);
+                mFeedSource.getRandomPhoto()
+                        .subscribe(new Action1<Photo>() {
+                            @Override
+                            public void call(Photo photo) {
+                                mWallpaperWorker.setWallpaper(photo);
+                            }
+                        });
+//                manager.removeViewImmediate(button);
             }
         });
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -100,7 +109,9 @@ public class FloatService extends Service {
 
     @Subscribe
     public void onHomeInvoked(InvokeHomeEvent e) {
-        mFloatView.fadeOut();
+        if (mFloatView.isAttachedToWindow()) {
+            mFloatView.fadeOut();
+        }
     }
 
     @Subscribe

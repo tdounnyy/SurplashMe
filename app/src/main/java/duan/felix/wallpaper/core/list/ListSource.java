@@ -19,6 +19,6 @@ public abstract class ListSource<T> {
 
     protected abstract Observable<List<T>> loadAfter();
 
-    protected abstract Observable<Photo> getRandomPhoto();
+    public abstract Observable<Photo> getRandomPhoto();
 
 }

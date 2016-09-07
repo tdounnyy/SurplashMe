@@ -32,6 +32,8 @@ public class FloatPhotoItemContainer extends RelativeLayout {
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
+    private boolean mAnimating;
+
     public FloatPhotoItemContainer(Context context) {
         this(context, null, 0);
     }
@@ -67,32 +69,36 @@ public class FloatPhotoItemContainer extends RelativeLayout {
     }
 
     public void fadeOut() {
-        ValueAnimator animator = ValueAnimator.ofFloat(1, 0)
-                .setDuration(1000);
+        if (!mAnimating) {
+            mAnimating = true;
+            ValueAnimator animator = ValueAnimator.ofFloat(1, 0)
+                    .setDuration(1000);
 
-        final View photoView = getPhotoView();
-        final View progressBar = getProgressBar();
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float alpha = (float) animation.getAnimatedValue();
-                photoView.setAlpha(alpha);
-            }
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                progressBar.setVisibility(View.GONE);
-            }
+            final View photoView = getPhotoView();
+            final View progressBar = getProgressBar();
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float alpha = (float) animation.getAnimatedValue();
+                    photoView.setAlpha(alpha);
+                }
+            });
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    progressBar.setVisibility(View.GONE);
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                selfDetach();
-                Bus.post(new RequestRandomToastEvent());
-            }
-        });
-        animator.start();
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mAnimating = false;
+                    selfDetach();
+                    Bus.post(new RequestRandomToastEvent());
+                }
+            });
+            animator.start();
+        }
     }
 }
 
