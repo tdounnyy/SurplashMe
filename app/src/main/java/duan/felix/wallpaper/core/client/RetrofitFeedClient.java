@@ -17,6 +17,7 @@ import rx.schedulers.Schedulers;
 import static duan.felix.wallpaper.scaffold.utils.Constant.LOAD_PER_PAGE;
 
 /**
+ * TODO *** timeout handle, patient care
  * @author Felix.Duan.
  */
 
