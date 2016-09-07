@@ -108,13 +108,7 @@ public class WallpaperWorker {
 
                         dataSource.subscribe(bitmapDataSubscriber, new DefaultExecutorSupplier(2).forBackgroundTasks());
 
-                        return subject.onErrorReturn(new Func1<Throwable, Bitmap>() {
-                            @Override
-                            public Bitmap call(Throwable throwable) {
-                                LogUtils.e(TAG, "subject onErrorReturn", throwable);
-                                return null;
-                            }
-                        });
+                        return subject;
                     }
                 });
     }
@@ -219,6 +213,11 @@ public class WallpaperWorker {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(TAG, "setWallpaper err", throwable);
                     }
                 });
     }
