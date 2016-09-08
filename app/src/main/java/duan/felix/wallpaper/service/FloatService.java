@@ -50,7 +50,7 @@ public class FloatService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (!intent.hasExtra(EXTRA_PHOTO)) {
+        if (intent == null || !intent.hasExtra(EXTRA_PHOTO)) {
             stopSelf();
         } else {
             Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
