@@ -1,6 +1,7 @@
 package duan.felix.wallpaper.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
@@ -13,11 +14,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.feed.FeedSource;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.service.FloatService;
 import rx.functions.Action1;
 
 /**
@@ -62,7 +65,13 @@ public class FloatButtonView extends RelativeLayout {
                         mWallpaperWorker.setWallpaper(photo);
                     }
                 });
-//                manager.removeViewImmediate(button);
+    }
+
+    @OnLongClick(R.id.btn_float)
+    boolean onButtonLongClick() {
+        Context context = getContext();
+        context.stopService(new Intent(context, FloatService.class));
+        return true;
     }
 
     public void selfDetach() {

@@ -58,7 +58,7 @@ public class FloatService extends Service {
             mWallpaperWorker.setWallpaper(photo);
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     private View addFloatView(Photo photo) {
