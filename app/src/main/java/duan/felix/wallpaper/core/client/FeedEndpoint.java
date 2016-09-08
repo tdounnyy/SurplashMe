@@ -22,4 +22,5 @@ interface FeedEndpoint {
 
     @GET("photos/{photoId}")
     Observable<Photo> getPhoto(@Path("photoId") String photoId);
+
 }

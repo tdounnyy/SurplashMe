@@ -8,19 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.greenrobot.eventbus.Subscribe;
-
-import javax.inject.Inject;
-
 import duan.felix.wallpaper.R;
-import duan.felix.wallpaper.core.event.InvokeHomeEvent;
-import duan.felix.wallpaper.core.event.ShowFloatButtonEvent;
-import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.core.worker.WallpaperWorker;
-import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.core.event.ServiceStartedEvent;
 import duan.felix.wallpaper.scaffold.event.Bus;
 import duan.felix.wallpaper.widget.FloatButtonView;
-import duan.felix.wallpaper.widget.FloatPhotoItemContainer;
 
 // TODO: random next
 // TODO: sequence next
@@ -32,51 +23,53 @@ public class FloatService extends Service {
 
     private WindowManager manager = null;
 
-    @Inject
-    WallpaperWorker mWallpaperWorker;
+//    @Inject
+//    WallpaperWorker mWallpaperWorker;
 
-    private FloatPhotoItemContainer mPhotoView = null;
+//    private FloatPhotoItemContainer mPhotoView = null;
 
     private FloatButtonView mButtonView = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Global.Injector.inject(this);
-        Bus.register(this);
+//        Global.Injector.inject(this);
+//        Bus.register(this);
         manager = (WindowManager) getSystemService(WINDOW_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent == null || !intent.hasExtra(EXTRA_PHOTO)) {
+        if (intent == null) {
             stopSelf();
         } else {
-            Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
-            addFloatView(photo);
-            mWallpaperWorker.setWallpaper(photo);
+//            Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
+//            addFloatView(photo);
+//            mWallpaperWorker.setWallpaper(photo);
+            addFloatButtonView();
+            Bus.post(new ServiceStartedEvent());
         }
 
         return START_NOT_STICKY;
     }
 
-    private View addFloatView(Photo photo) {
-        mPhotoView = (FloatPhotoItemContainer) LayoutInflater
-                .from(this).inflate(R.layout.a_float_photo_item, null);
-
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                0, 0,
-                WindowManager.LayoutParams.TYPE_TOAST,
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                        | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                PixelFormat.TRANSLUCENT);
-        manager.addView(mPhotoView, params);
-        mPhotoView.setPhoto(photo);
-        return mPhotoView;
-    }
+//    private View addFloatView(Photo photo) {
+//        mPhotoView = (FloatPhotoItemContainer) LayoutInflater
+//                .from(this).inflate(R.layout.a_float_photo_item, null);
+//
+//        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+//                WindowManager.LayoutParams.MATCH_PARENT,
+//                WindowManager.LayoutParams.MATCH_PARENT,
+//                0, 0,
+//                WindowManager.LayoutParams.TYPE_TOAST,
+//                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                        | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+//                PixelFormat.TRANSLUCENT);
+//        manager.addView(mPhotoView, params);
+//        mPhotoView.setPhoto(photo);
+//        return mPhotoView;
+//    }
 
     private View addFloatButtonView() {
         mButtonView = (FloatButtonView) LayoutInflater
@@ -94,24 +87,24 @@ public class FloatService extends Service {
         return mButtonView;
     }
 
-    @Subscribe
-    public void onHomeInvoked(InvokeHomeEvent e) {
-        if (mPhotoView.isAttachedToWindow()) {
-            mPhotoView.fadeOut();
-        }
-    }
+//    @Subscribe
+//    public void onHomeInvoked(InvokeHomeEvent e) {
+//        if (mPhotoView.isAttachedToWindow()) {
+//            mPhotoView.fadeOut();
+//        }
+//    }
 
-    @Subscribe
-    public void onShowFloatButtonEvent(ShowFloatButtonEvent e) {
-        addFloatButtonView();
-    }
+//    @Subscribe
+//    public void onShowFloatButtonEvent(ShowFloatButtonEvent e) {
+//        addFloatButtonView();
+//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mPhotoView != null) {
-            mPhotoView.selfDetach();
-        }
+//        if (mPhotoView != null) {
+//            mPhotoView.selfDetach();
+//        }
         if (mButtonView != null) {
             mButtonView.selfDetach();
         }

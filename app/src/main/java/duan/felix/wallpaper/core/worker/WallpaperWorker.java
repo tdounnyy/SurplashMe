@@ -8,9 +8,7 @@ import android.os.Environment;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.BuildConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -21,6 +19,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -33,6 +33,7 @@ import duan.felix.wallpaper.scaffold.utils.BitmapUtils;
 import duan.felix.wallpaper.scaffold.utils.Constant;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.Observable;
+import rx.exceptions.Exceptions;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -63,18 +64,22 @@ public class WallpaperWorker {
     }
 
     private Observable<Bitmap> getResizedBitmap(Photo photo, final Rect rect) {
-        return Observable.just(photo.urls.full)
+        LogUtils.d(TAG, "getResizedBitmap");
+//        return Observable.just(photo.urls.full)
+        return Observable.just(String.format("https://unsplash.it/%d/%d/?random", rect.width(), rect.height()))
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Func1<String, Observable<Bitmap>>() {
                     @Override
                     public Observable<Bitmap> call(String uri) {
 
+                        Fresco.getImagePipeline()
+                                .evictFromCache(Uri.parse(uri));
                         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri));
-                        if (rect != null) {
-                            ResizeOptions resizeOptions =
-                                    new ResizeOptions(rect.width(), rect.height());
-                            builder.setResizeOptions(resizeOptions);
-                        }
+//                        if (rect != null) {
+//                            ResizeOptions resizeOptions =
+//                                    new ResizeOptions(rect.width(), rect.height());
+//                            builder.setResizeOptions(resizeOptions);
+//                        }
 
                         final PublishSubject<Bitmap> subject = PublishSubject.create();
                         DataSource<CloseableReference<CloseableImage>> dataSource =
@@ -85,6 +90,7 @@ public class WallpaperWorker {
                         BaseBitmapDataSubscriber bitmapDataSubscriber = new BaseBitmapDataSubscriber() {
                             @Override
                             protected void onNewResultImpl(@Nullable Bitmap bitmap) {
+                                LogUtils.d(TAG, "onNewResultImpl");
                                 if (bitmap != null) {
                                     if (rect == null
                                             || (bitmap.getWidth() == rect.width()
@@ -193,31 +199,70 @@ public class WallpaperWorker {
     }
 
     public void setWallpaper(Photo photo) {
-        LogUtils.d(TAG, "setWallpaper: " + photo);
 
 //        clearPersisted();
 //        storeViewPhoto(photo, displayInfo);
 //        storeWallpaperSizePhoto(photo);
 //        storeOriginPhoto(photo);
 
-        getWallpaperSizeBitmap(photo)
-                .subscribe(new Action1<Bitmap>() {
+//        getWallpaperSizeBitmap(photo)
+//                .subscribe(new Action1<Bitmap>() {
+//                    @Override
+//                    public void call(Bitmap bitmap) {
+//                        LogUtils.d(TAG, "subscribe");
+//                        try {
+////                            clearPersisted();
+////                            if (BuildConfig.DEBUG) {
+////                                persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
+////                            }
+//                            mWallpaperManager.setBitmap(bitmap);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        LogUtils.e(TAG, "setWallpaper err", throwable);
+//                    }
+//                });
+
+        int width = mWallpaperManager.getDesiredMinimumWidth();
+        int height = mWallpaperManager.getDesiredMinimumHeight();
+        final String stringUrl = String.format("https://unsplash.it/%d/%d/?random", width, height);
+        LogUtils.d(TAG, "setWallpaper: " + stringUrl);
+        Observable.just(stringUrl)
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<String, InputStream>() {
                     @Override
-                    public void call(Bitmap bitmap) {
+                    public InputStream call(String s) {
                         try {
-                            clearPersisted();
-                            if (BuildConfig.DEBUG) {
-                                persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
-                            }
-                            mWallpaperManager.setBitmap(bitmap);
+                            return new URL(stringUrl).openStream();
                         } catch (IOException e) {
                             e.printStackTrace();
+                            Exceptions.propagate(e);
+                            return null;
+                        }
+                    }
+                })
+                .subscribe(new Action1<InputStream>() {
+                    @Override
+                    public void call(InputStream inputStream) {
+                        LogUtils.d(TAG, "subscribe " + inputStream);
+                        if (inputStream != null) {
+                            try {
+                                mWallpaperManager.setStream(inputStream);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Observable.error(e);
+                            }
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtils.e(TAG, "setWallpaper err", throwable);
+
+                        LogUtils.e(TAG, "setwallpaper err", throwable);
                     }
                 });
     }
