@@ -30,14 +30,14 @@ public class FloatService extends Service {
 
     public static final String EXTRA_PHOTO = "extra_photo";
 
-    private WindowManager manager;
+    private WindowManager manager = null;
 
     @Inject
     WallpaperWorker mWallpaperWorker;
 
-    private FloatPhotoItemContainer mPhotoView;
+    private FloatPhotoItemContainer mPhotoView = null;
 
-    private FloatButtonView mButtonView;
+    private FloatButtonView mButtonView = null;
 
     @Override
     public void onCreate() {
@@ -50,9 +50,13 @@ public class FloatService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
-        addFloatView(photo);
-        mWallpaperWorker.setWallpaper(photo);
+        if (!intent.hasExtra(EXTRA_PHOTO)) {
+            stopSelf();
+        } else {
+            Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
+            addFloatView(photo);
+            mWallpaperWorker.setWallpaper(photo);
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -105,7 +109,12 @@ public class FloatService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPhotoView.selfDetach();
+        if (mPhotoView != null) {
+            mPhotoView.selfDetach();
+        }
+        if (mButtonView != null) {
+            mButtonView.selfDetach();
+        }
         Bus.unregister(this);
     }
 

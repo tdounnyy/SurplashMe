@@ -3,6 +3,7 @@ package duan.felix.wallpaper.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -64,4 +65,10 @@ public class FloatButtonView extends RelativeLayout {
 //                manager.removeViewImmediate(button);
     }
 
+    public void selfDetach() {
+        if (isAttachedToWindow()) {
+            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            manager.removeView(this);
+        }
+    }
 }
