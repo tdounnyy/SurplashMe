@@ -19,8 +19,10 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.event.Bus;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.widget.FloatButtonView;
 import duan.felix.wallpaper.widget.FloatPhotoItemContainer;
+import rx.functions.Action1;
 
 // TODO: random next
 // TODO: sequence next
@@ -55,7 +57,19 @@ public class FloatService extends Service {
         } else {
             Photo photo = intent.getParcelableExtra(EXTRA_PHOTO);
             addFloatView(photo);
-            mWallpaperWorker.setWallpaper(photo);
+            mWallpaperWorker.setWallpaper(photo)
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                            LogUtils.d(TAG, "wallpaper set");
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            LogUtils.e(TAG, "wallpaper set fail", throwable);
+                            stopSelf();
+                        }
+                    });
         }
 
         return START_NOT_STICKY;

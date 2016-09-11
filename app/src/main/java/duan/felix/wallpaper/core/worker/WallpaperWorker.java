@@ -192,7 +192,7 @@ public class WallpaperWorker {
 
     }
 
-    public void setWallpaper(Photo photo) {
+    public Observable<Boolean> setWallpaper(Photo photo) {
         LogUtils.d(TAG, "setWallpaper: " + photo);
 
 //        clearPersisted();
@@ -200,33 +200,37 @@ public class WallpaperWorker {
 //        storeWallpaperSizePhoto(photo);
 //        storeOriginPhoto(photo);
 
-        getWallpaperSizeBitmap(photo)
-                .subscribe(new Action1<Bitmap>() {
-                    @Override
-                    public void call(Bitmap bitmap) {
-                        try {
-                            clearPersisted();
-                            if (BuildConfig.DEBUG) {
-                                persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
-                            }
-                            mWallpaperManager.setBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        LogUtils.e(TAG, "setWallpaper err", throwable);
-                    }
-                });
+        return getWallpaperSizeBitmap(photo)
+                .map(new Func1<Bitmap, Boolean>() {
+                         @Override
+                         public Boolean call(Bitmap bitmap) {
+                             try {
+                                 clearPersisted();
+                                 if (BuildConfig.DEBUG) {
+                                     persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
+                                 }
+                                 mWallpaperManager.setBitmap(bitmap);
+                                 return true;
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                                 LogUtils.e(TAG, "set wallpaper fail", e);
+                                 return false;
+                             }
+                         }
+
+                     }
+                );
     }
+
 
     private void clearPersisted() {
         File dir = new File(Environment.getExternalStorageDirectory(), Constant.File.DIR);
         if (dir.exists()) {
-            for (File f : dir.listFiles()) {
-                f.delete();
+            File[] files = dir.listFiles();
+            if (files != null && files.length > 0) {
+                for (File f : files) {
+                    f.delete();
+                }
             }
         }
     }

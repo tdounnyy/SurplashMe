@@ -17,6 +17,7 @@ import duan.felix.wallpaper.scaffold.event.LoadAfterEvent;
 import duan.felix.wallpaper.scaffold.event.RefreshEvent;
 import duan.felix.wallpaper.scaffold.presenter.Presenter;
 import duan.felix.wallpaper.scaffold.utils.IntentStarter;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.scaffold.utils.ToastUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -27,6 +28,8 @@ import rx.functions.Action1;
 
 // TODO: * composite presenter
 class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
+
+    private static final String TAG = "FeedPagerPresenter";
 
     private FeedSource mFeedSource;
     private Context mContext;
@@ -52,6 +55,11 @@ class FeedPagerPresenter extends Presenter<Feed, ViewPager> {
                     @Override
                     public void call(List<Photo> photos) {
                         mPagerAdapter.setItems(photos);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(TAG, "refresh fail", throwable);
                     }
                 });
     }

@@ -20,14 +20,19 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.feed.FeedSource;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import duan.felix.wallpaper.service.FloatService;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * @author Felix.Duan.
  */
 
 public class FloatButtonView extends RelativeLayout {
+
+    private static final String TAG = "FloatButtonView";
 
     private FeedSource mFeedSource;
 
@@ -59,10 +64,21 @@ public class FloatButtonView extends RelativeLayout {
     @OnClick(R.id.btn_float)
     void onButtonClick() {
         mFeedSource.getRandomPhoto()
-                .subscribe(new Action1<Photo>() {
+                .flatMap(new Func1<Photo, Observable<Boolean>>() {
                     @Override
-                    public void call(Photo photo) {
-                        mWallpaperWorker.setWallpaper(photo);
+                    public Observable<Boolean> call(Photo photo) {
+                        return mWallpaperWorker.setWallpaper(photo);
+                    }
+                })
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        LogUtils.d(TAG, "random photo set");
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(TAG, "random photo fail", throwable);
                     }
                 });
     }
