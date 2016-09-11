@@ -49,7 +49,7 @@ public class FloatService extends Service {
 //            mWallpaperWorker.setWallpaper(photo);
             addFloatButtonView();
             Bus.post(new ServiceStartedEvent());
-        }
+       }
 
         return START_NOT_STICKY;
     }

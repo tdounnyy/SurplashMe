@@ -198,40 +198,13 @@ public class WallpaperWorker {
 
     }
 
-    public void setWallpaper(Photo photo) {
-
-//        clearPersisted();
-//        storeViewPhoto(photo, displayInfo);
-//        storeWallpaperSizePhoto(photo);
-//        storeOriginPhoto(photo);
-
-//        getWallpaperSizeBitmap(photo)
-//                .subscribe(new Action1<Bitmap>() {
-//                    @Override
-//                    public void call(Bitmap bitmap) {
-//                        LogUtils.d(TAG, "subscribe");
-//                        try {
-////                            clearPersisted();
-////                            if (BuildConfig.DEBUG) {
-////                                persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
-////                            }
-//                            mWallpaperManager.setBitmap(bitmap);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Action1<Throwable>() {
-//                    @Override
-//                    public void call(Throwable throwable) {
-//                        LogUtils.e(TAG, "setWallpaper err", throwable);
-//                    }
-//                });
-
+    public Observable<Boolean> setWallpaper(Photo photo) {
+        LogUtils.d(TAG, "setWallpaper: " + photo);
         int width = mWallpaperManager.getDesiredMinimumWidth();
         int height = mWallpaperManager.getDesiredMinimumHeight();
         final String stringUrl = String.format("https://unsplash.it/%d/%d/?random", width, height);
         LogUtils.d(TAG, "setWallpaper: " + stringUrl);
-        Observable.just(stringUrl)
+        return Observable.just(stringUrl)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<String, InputStream>() {
                     @Override
@@ -245,33 +218,30 @@ public class WallpaperWorker {
                         }
                     }
                 })
-                .subscribe(new Action1<InputStream>() {
+                .map(new Func1<InputStream, Boolean>() {
                     @Override
-                    public void call(InputStream inputStream) {
-                        LogUtils.d(TAG, "subscribe " + inputStream);
-                        if (inputStream != null) {
-                            try {
-                                mWallpaperManager.setStream(inputStream);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                Observable.error(e);
-                            }
+                    public Boolean call(InputStream inputStream) {
+                        try {
+                            mWallpaperManager.setStream(inputStream);
+                            return true;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Observable.error(e);
+                            return false;
                         }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                        LogUtils.e(TAG, "setwallpaper err", throwable);
                     }
                 });
     }
 
+
     private void clearPersisted() {
         File dir = new File(Environment.getExternalStorageDirectory(), Constant.File.DIR);
         if (dir.exists()) {
-            for (File f : dir.listFiles()) {
-                f.delete();
+            File[] files = dir.listFiles();
+            if (files != null && files.length > 0) {
+                for (File f : files) {
+                    f.delete();
+                }
             }
         }
     }
