@@ -24,6 +24,5 @@ public class WallPaperChangedReceiver extends BroadcastReceiver {
         // TODO: * make a toast to restore previous wallpaper
         LogUtils.d(TAG, "changed");
         Bus.post(new ToastEvent("Wallpaper changed"));
-        Bus.post(new InvokeHomeEvent());
     }
 }
