@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import duan.felix.wallpaper.core.event.ServiceStartedEvent;
 import duan.felix.wallpaper.scaffold.app.BaseActivity;
@@ -72,8 +73,8 @@ public class FeedGalleryActivity extends BaseActivity {
 //        mFeedPagerPresenter.onResume();
     }
 
-    @Subscribe
-    void onServiceStartedEvent(ServiceStartedEvent e) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServiceStartedEvent(ServiceStartedEvent e) {
         LogUtils.d(TAG, "onServiceStartedEvent");
         IntentStarter.launchHomeApp(this);
 //        finish();

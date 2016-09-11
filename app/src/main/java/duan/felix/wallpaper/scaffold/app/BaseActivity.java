@@ -1,6 +1,7 @@
 package duan.felix.wallpaper.scaffold.app;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -15,14 +16,14 @@ import duan.felix.wallpaper.scaffold.utils.ToastUtils;
 
 public class BaseActivity extends Activity {
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bus.register(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         Bus.unregister(this);
     }
 
