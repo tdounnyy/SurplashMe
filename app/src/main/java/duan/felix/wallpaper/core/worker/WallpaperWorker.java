@@ -200,29 +200,12 @@ public class WallpaperWorker {
 
     public Observable<Boolean> setWallpaper(Photo photo) {
         LogUtils.d(TAG, "setWallpaper: " + photo);
-        int width = mWallpaperManager.getDesiredMinimumWidth();
-        int height = mWallpaperManager.getDesiredMinimumHeight();
-        final String stringUrl = String.format("https://unsplash.it/%d/%d/?random", width, height);
-        LogUtils.d(TAG, "setWallpaper: " + stringUrl);
-        return Observable.just(stringUrl)
-                .subscribeOn(Schedulers.io())
-                .map(new Func1<String, InputStream>() {
+        return getWallpaperSizeBitmap(photo)
+                .map(new Func1<Bitmap, Boolean>() {
                     @Override
-                    public InputStream call(String s) {
+                    public Boolean call(Bitmap bitmap) {
                         try {
-                            return new URL(stringUrl).openStream();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Exceptions.propagate(e);
-                            return null;
-                        }
-                    }
-                })
-                .map(new Func1<InputStream, Boolean>() {
-                    @Override
-                    public Boolean call(InputStream inputStream) {
-                        try {
-                            mWallpaperManager.setStream(inputStream);
+                            mWallpaperManager.setBitmap(bitmap);
                             return true;
                         } catch (IOException e) {
                             e.printStackTrace();
