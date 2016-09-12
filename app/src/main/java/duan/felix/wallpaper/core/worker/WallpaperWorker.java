@@ -4,7 +4,6 @@ import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Environment;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -12,29 +11,19 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.model.Photo;
-import duan.felix.wallpaper.helper.DisplayInfo;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.BitmapUtils;
-import duan.felix.wallpaper.scaffold.utils.Constant;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.Observable;
-import rx.exceptions.Exceptions;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -51,8 +40,6 @@ public class WallpaperWorker {
 
     private static final String TAG = "WallpaperWorker";
 
-    CloseableReference<PooledByteBuffer> result = null;
-
     @Inject
     WallpaperManager mWallpaperManager;
 
@@ -65,8 +52,7 @@ public class WallpaperWorker {
 
     private Observable<Bitmap> getResizedBitmap(Photo photo, final Rect rect) {
         LogUtils.d(TAG, "getResizedBitmap");
-//        return Observable.just(photo.urls.full)
-        return Observable.just(String.format("https://unsplash.it/%d/%d/?random", rect.width(), rect.height()))
+        return Observable.just(photo.urls.full)
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Func1<String, Observable<Bitmap>>() {
                     @Override
@@ -75,11 +61,6 @@ public class WallpaperWorker {
                         Fresco.getImagePipeline()
                                 .evictFromCache(Uri.parse(uri));
                         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri));
-//                        if (rect != null) {
-//                            ResizeOptions resizeOptions =
-//                                    new ResizeOptions(rect.width(), rect.height());
-//                            builder.setResizeOptions(resizeOptions);
-//                        }
 
                         final PublishSubject<Bitmap> subject = PublishSubject.create();
                         DataSource<CloseableReference<CloseableImage>> dataSource =
@@ -119,83 +100,11 @@ public class WallpaperWorker {
                 });
     }
 
-    private Observable<Bitmap> getViewSizeBitmap(Photo photo, DisplayInfo info) {
-        Rect rect = info.getRootViewRect();
-        return getResizedBitmap(photo, rect);
-    }
-
-    public void storeViewPhoto(final Photo photo, final DisplayInfo info) {
-        getViewSizeBitmap(photo, info)
-                .subscribe(new Action1<Bitmap>() {
-                    @Override
-                    public void call(Bitmap bitmap) {
-                        LogUtils.d(TAG, "view subscribe called");
-                        persistBitmap(bitmap, Constant.File.VIEW_SIZE);
-                    }
-                });
-    }
 
     private Observable<Bitmap> getWallpaperSizeBitmap(Photo photo) {
         int width = mWallpaperManager.getDesiredMinimumWidth();
         int height = mWallpaperManager.getDesiredMinimumHeight();
         return getResizedBitmap(photo, new Rect(0, 0, width, height));
-    }
-
-    public void storeWallpaperSizePhoto(Photo photo) {
-        getWallpaperSizeBitmap(photo)
-                .subscribe(new Action1<Bitmap>() {
-                    @Override
-                    public void call(Bitmap bitmap) {
-                        LogUtils.d(TAG, "wallpaper subscribe called");
-                        persistBitmap(bitmap, Constant.File.WALLPAPER_SIZE);
-
-                    }
-                });
-
-    }
-
-    public Observable<Bitmap> getOriginBitmap(Photo photo) {
-        return getResizedBitmap(photo, null);
-    }
-
-    public void storeOriginPhoto(Photo photo) {
-        getOriginBitmap(photo)
-                .subscribe(new Action1<Bitmap>() {
-                    @Override
-                    public void call(Bitmap bitmap) {
-                        LogUtils.d(TAG, "origin size subscribe called");
-                        persistBitmap(bitmap, Constant.File.ORIGIN_SIZE);
-                    }
-                });
-    }
-
-    private void persistBitmap(Bitmap bitmap, String filename) {
-        if (bitmap == null) {
-            return;
-        }
-        File dir = new File(Environment.getExternalStorageDirectory(), Constant.File.DIR);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        File file = new File(dir, filename);
-        if (file.exists()) {
-            file.delete();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            BufferedOutputStream bufferedOutputStream =
-                    new BufferedOutputStream(new FileOutputStream(file));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bufferedOutputStream);
-            bufferedOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            LogUtils.e(TAG, "saveBitmapToFile", e);
-        }
-
     }
 
     public Observable<Boolean> setWallpaper(Photo photo) {
@@ -216,17 +125,5 @@ public class WallpaperWorker {
                 });
     }
 
-
-    private void clearPersisted() {
-        File dir = new File(Environment.getExternalStorageDirectory(), Constant.File.DIR);
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
-            if (files != null && files.length > 0) {
-                for (File f : files) {
-                    f.delete();
-                }
-            }
-        }
-    }
 
 }
