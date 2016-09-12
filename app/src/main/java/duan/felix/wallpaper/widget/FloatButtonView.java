@@ -27,6 +27,11 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
+ * TODO ** work status
+ * TODO *** one task per time
+ * TODO *** close button
+ * TODO *** local disk cache demo mode
+ * TODO * drag float view
  * @author Felix.Duan.
  */
 
