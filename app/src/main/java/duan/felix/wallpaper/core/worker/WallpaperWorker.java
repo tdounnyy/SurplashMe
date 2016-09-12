@@ -20,7 +20,10 @@ import javax.inject.Inject;
 
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.model.Photo;
+import duan.felix.wallpaper.core.model.Progress;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.event.Bus;
+import duan.felix.wallpaper.scaffold.event.ProgressEvent;
 import duan.felix.wallpaper.scaffold.utils.BitmapUtils;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import rx.Observable;
@@ -58,6 +61,7 @@ public class WallpaperWorker {
                     @Override
                     public Observable<Bitmap> call(String uri) {
 
+                        Bus.post(new ProgressEvent(Progress.State.DOWNLOADING));
                         Fresco.getImagePipeline()
                                 .evictFromCache(Uri.parse(uri));
                         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri));
@@ -78,6 +82,7 @@ public class WallpaperWorker {
                                             && bitmap.getHeight() == rect.height())) {
                                         subject.onNext(bitmap);
                                     } else {
+                                        Bus.post(new ProgressEvent(Progress.State.RESIZING));
                                         Bitmap resizedBmp = BitmapUtils.resizeOuterFit(bitmap, rect);
                                         Bitmap croppedBmp = BitmapUtils.cropCenterInside(resizedBmp, rect);
                                         subject.onNext(Bitmap.createBitmap(croppedBmp));
@@ -102,6 +107,7 @@ public class WallpaperWorker {
 
 
     private Observable<Bitmap> getWallpaperSizeBitmap(Photo photo) {
+        Bus.post(new ProgressEvent(Progress.State.MEASURING));
         int width = mWallpaperManager.getDesiredMinimumWidth();
         int height = mWallpaperManager.getDesiredMinimumHeight();
         return getResizedBitmap(photo, new Rect(0, 0, width, height));
@@ -114,6 +120,7 @@ public class WallpaperWorker {
                     @Override
                     public Boolean call(Bitmap bitmap) {
                         try {
+                            Bus.post(new ProgressEvent(Progress.State.SETTING));
                             mWallpaperManager.setBitmap(bitmap);
                             return true;
                         } catch (IOException e) {

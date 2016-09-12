@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">WallPaper</string>
     <string name="text_float_button">Another wallpaper</string>
+    <string name="progress_fetching">Fetching next photo</string>
+    <string name="progress_measuring">Measuring screen</string>
+    <string name="progress_downloading">Downloading image</string>
+    <string name="progress_resizing">Resizing image</string>
+    <string name="progress_setting">Setting</string>
+    <string name="progress_success">Success</string>
+    <string name="progress_fail">Fail</string>
 </resources>

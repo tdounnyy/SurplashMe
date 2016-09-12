@@ -52,14 +52,6 @@ class FeedLoadMorePresenter extends Presenter<Model, ViewPager> implements LoadM
     }
 
     @Override
-    public void onStart() {
-    }
-
-    @Override
-    public void onStop() {
-    }
-
-    @Override
     public void onResume() {
         mViewPager.addOnPageChangeListener(mListener);
     }

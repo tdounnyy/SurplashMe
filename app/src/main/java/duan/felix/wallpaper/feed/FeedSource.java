@@ -7,7 +7,10 @@ import javax.inject.Inject;
 import duan.felix.wallpaper.core.client.RetrofitFeedClient;
 import duan.felix.wallpaper.core.list.ListSource;
 import duan.felix.wallpaper.core.model.Photo;
+import duan.felix.wallpaper.core.model.Progress;
 import duan.felix.wallpaper.scaffold.app.Global;
+import duan.felix.wallpaper.scaffold.event.Bus;
+import duan.felix.wallpaper.scaffold.event.ProgressEvent;
 import duan.felix.wallpaper.scaffold.utils.CollectionUtils;
 import duan.felix.wallpaper.scaffold.utils.LogUtils;
 import io.realm.Realm;
@@ -93,6 +96,7 @@ public class FeedSource extends ListSource<Photo> {
 
     @Override
     public Observable<Photo> getRandomPhoto() {
+        Bus.post(new ProgressEvent(Progress.State.FETCHING));
         return mClient.getRandomPhoto();
     }
 
