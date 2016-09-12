@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -53,19 +54,20 @@ public class WallpaperWorker {
         Global.Injector.inject(this);
     }
 
-    private Observable<Bitmap> getResizedBitmap(Photo photo, final Rect rect) {
+    private Observable<Bitmap> getResizedBitmap(final Photo photo, final Rect rect) {
         LogUtils.d(TAG, "getResizedBitmap");
         return Observable.just(photo.urls.full)
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Func1<String, Observable<Bitmap>>() {
                     @Override
                     public Observable<Bitmap> call(String uri) {
-
                         Bus.post(new ProgressEvent(Progress.State.DOWNLOADING));
-                        Fresco.getImagePipeline()
-                                .evictFromCache(Uri.parse(uri));
                         ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri));
-
+                        if (rect != null
+                                && photo.width > rect.width()
+                                && photo.height > rect.height()) {
+                            builder.setResizeOptions(new ResizeOptions(rect.width(), rect.height()));
+                        }
                         final PublishSubject<Bitmap> subject = PublishSubject.create();
                         DataSource<CloseableReference<CloseableImage>> dataSource =
                                 Fresco.getImagePipeline()
@@ -75,11 +77,10 @@ public class WallpaperWorker {
                         BaseBitmapDataSubscriber bitmapDataSubscriber = new BaseBitmapDataSubscriber() {
                             @Override
                             protected void onNewResultImpl(@Nullable Bitmap bitmap) {
-                                LogUtils.d(TAG, "onNewResultImpl");
                                 if (bitmap != null) {
                                     if (rect == null
-                                            || (bitmap.getWidth() == rect.width()
-                                            && bitmap.getHeight() == rect.height())) {
+                                            || (bitmap.getWidth() <= rect.width()
+                                            || bitmap.getHeight() <= rect.height())) {
                                         subject.onNext(bitmap);
                                     } else {
                                         Bus.post(new ProgressEvent(Progress.State.RESIZING));
@@ -127,6 +128,8 @@ public class WallpaperWorker {
                             e.printStackTrace();
                             Observable.error(e);
                             return false;
+                        } finally {
+                            System.gc();
                         }
                     }
                 });
