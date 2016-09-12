@@ -53,11 +53,11 @@ public class ProgressView extends TextView {
                 break;
         }
 
-        setVisibility(state == Progress.State.IDLE ? GONE : VISIBLE);
+        setVisibility(state == Progress.State.IDLE ? INVISIBLE : VISIBLE);
     }
 
     public void reset() {
         setText(null);
-        setVisibility(GONE);
+        setVisibility(INVISIBLE);
     }
 }

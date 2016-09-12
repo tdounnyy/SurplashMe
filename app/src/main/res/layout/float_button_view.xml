@@ -5,18 +5,26 @@
     >
 
     <Button
-        android:id="@+id/btn_float"
+        android:id="@+id/btn_random"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="@string/text_float_button"
+        />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btn_random"
+        android:text="@string/close"
         />
 
     <duan.felix.wallpaper.widget.ProgressView
         android:id="@+id/progress_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_float"
-        android:visibility="gone"
+        android:layout_below="@id/btn_random"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
         />
 </merge>

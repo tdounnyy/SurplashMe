@@ -37,7 +37,7 @@ public class FeedGalleryActivity extends BaseActivity {
 //        mFeed = new Feed();
 //        mFeedPagerPresenter = new FeedPagerPresenter(mFeed, mViewPager);
         IntentStarter.startService(this, new Intent(this, FloatService.class));
-//        finish();
+        finish();
     }
 
     @Override

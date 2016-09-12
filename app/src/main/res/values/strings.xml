@@ -8,4 +8,5 @@
     <string name="progress_setting">Setting</string>
     <string name="progress_success">Success</string>
     <string name="progress_fail">Fail</string>
+    <string name="close">close</string>
 </resources>

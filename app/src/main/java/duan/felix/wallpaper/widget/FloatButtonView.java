@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.model.Progress;
@@ -31,7 +29,6 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
- * TODO *** close button
  * TODO *** local disk cache demo mode
  * TODO * drag float view
  *
@@ -48,9 +45,6 @@ public class FloatButtonView extends RelativeLayout {
 
     @Inject
     WallpaperWorker mWallpaperWorker;
-
-    @BindView(R.id.btn_float)
-    Button mButton;
 
     @BindView(R.id.progress_view)
     ProgressView mProgressView;
@@ -72,8 +66,8 @@ public class FloatButtonView extends RelativeLayout {
         mProgressPresenter = new ProgressPresenter(mProgressView);
     }
 
-    @OnClick(R.id.btn_float)
-    void onButtonClick() {
+    @OnClick(R.id.btn_random)
+    void onRandomButtonClick() {
         if (mProgressPresenter.working()) {
             ToastUtils.toast(getContext(), "ignore click");
             return;//ignore
@@ -101,11 +95,11 @@ public class FloatButtonView extends RelativeLayout {
                 });
     }
 
-    @OnLongClick(R.id.btn_float)
-    boolean onButtonLongClick() {
+    @OnClick(R.id.btn_close)
+    void onCloseButtonClick() {
         Context context = getContext();
         context.stopService(new Intent(context, FloatService.class));
-        return true;
+        return;
     }
 
     public void selfDetach() {
