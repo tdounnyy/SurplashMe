@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WallPaper</string>
+    <string name="app_name">Surplash Me</string>
     <string name="text_float_button">Another wallpaper</string>
     <string name="progress_fetching">Fetching next photo</string>
     <string name="progress_measuring">Measuring screen</string>
