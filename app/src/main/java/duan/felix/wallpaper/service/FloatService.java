@@ -23,6 +23,8 @@ public class FloatService extends Service {
 
     private FloatButtonView mButtonView = null;
 
+    private boolean mRunning = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,8 +37,11 @@ public class FloatService extends Service {
         if (intent == null) {
             stopSelf();
         } else {
-            addFloatButtonView();
-            Bus.post(new ServiceStartedEvent());
+            if (!mRunning) {
+                mRunning = true;
+                addFloatButtonView();
+                Bus.post(new ServiceStartedEvent());
+            }
         }
 
         return START_NOT_STICKY;
@@ -65,6 +70,7 @@ public class FloatService extends Service {
             mButtonView.selfDetach();
         }
         Bus.unregister(this);
+        mRunning = false;
     }
 
     @Override
