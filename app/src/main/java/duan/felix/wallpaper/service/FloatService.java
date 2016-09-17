@@ -4,13 +4,19 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import duan.felix.wallpaper.R;
 import duan.felix.wallpaper.core.event.ServiceStartedEvent;
 import duan.felix.wallpaper.scaffold.event.Bus;
+import duan.felix.wallpaper.scaffold.event.ToastEvent;
+import duan.felix.wallpaper.scaffold.utils.ToastUtils;
 import duan.felix.wallpaper.widget.FloatButtonView;
 
 public class FloatService extends Service {
@@ -23,16 +29,18 @@ public class FloatService extends Service {
 
     private FloatButtonView mButtonView = null;
 
-    private boolean mRunning = false;
+    private static boolean mRunning = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
         manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        Bus.register(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
 
         if (intent == null) {
             stopSelf();
@@ -44,7 +52,7 @@ public class FloatService extends Service {
             }
         }
 
-        return START_NOT_STICKY;
+        return START_STICKY_COMPATIBILITY;
     }
 
     private View addFloatButtonView() {
@@ -54,13 +62,22 @@ public class FloatService extends Service {
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 0, 0,
-                WindowManager.LayoutParams.TYPE_TOAST,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                         | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
         manager.addView(mButtonView, params);
         return mButtonView;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void performToast(ToastEvent e) {
+        ToastUtils.toast(this, e.msg);
+    }
+
+    public static boolean running() {
+        return mRunning;
     }
 
     @Override
