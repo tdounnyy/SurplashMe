@@ -2,7 +2,6 @@ package duan.felix.wallpaper.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import duan.felix.wallpaper.core.model.Photo;
 import duan.felix.wallpaper.core.worker.WallpaperWorker;
 import duan.felix.wallpaper.scaffold.app.Global;
 import duan.felix.wallpaper.scaffold.utils.IntentStarter;
-import duan.felix.wallpaper.scaffold.utils.StringUtils;
 import duan.felix.wallpaper.service.FloatService;
 
 /**
@@ -71,10 +69,8 @@ public class PhotoItemContainer extends FrameLayout {
     public void setPhoto(Photo photo) {
         mPhoto = photo;
         mDraweeView.setImageURI(mPhoto.urls.regular);
-        if (!StringUtils.isEmpty(photo.color)) {
-            ColorDrawable drawable = new ColorDrawable(Color.parseColor(photo.color));
-            mDraweeView.getHierarchy().setPlaceholderImage(drawable);
-        }
+        ColorDrawable drawable = new ColorDrawable(photo.color);
+        mDraweeView.getHierarchy().setPlaceholderImage(drawable);
     }
 
     public View getPhotoView() {

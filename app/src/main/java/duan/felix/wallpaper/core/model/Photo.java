@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import duan.felix.wallpaper.scaffold.model.Model;
+import duan.felix.wallpaper.scaffold.net.Moshis.HexColor;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -25,7 +26,8 @@ public class Photo extends RealmObject implements Model, Parcelable {
 
     public int width;
 
-    public String color;
+    @HexColor
+    public int color = 0;
 
     public Photo() {
 
@@ -52,7 +54,7 @@ public class Photo extends RealmObject implements Model, Parcelable {
         if (width != photo.width) return false;
         if (id != null ? !id.equals(photo.id) : photo.id != null) return false;
         if (urls != null ? !urls.equals(photo.urls) : photo.urls != null) return false;
-        return color != null ? color.equals(photo.color) : photo.color == null;
+        return color == photo.color;
 
     }
 
@@ -62,7 +64,7 @@ public class Photo extends RealmObject implements Model, Parcelable {
         result = 31 * result + (urls != null ? urls.hashCode() : 0);
         result = 31 * result + height;
         result = 31 * result + width;
-        result = 31 * result + (color != null ? color.hashCode() : 0);
+        result = 31 * result + color;
         return result;
     }
 

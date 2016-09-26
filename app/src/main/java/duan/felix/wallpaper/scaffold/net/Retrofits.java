@@ -17,6 +17,6 @@ public class Retrofits {
                         .host(Host.DEFAULT)
                         .build())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(Gsons.DEFAULT);
+                .addConverterFactory(Moshis.FACTORY);
     }
 }
